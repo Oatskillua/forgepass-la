@@ -3,6 +3,7 @@ import InfoCard from '../components/InfoCard'
 import { rewardItems } from '../data/rewardItems'
 import PageCTA from '../components/PageCTA'
 import CardGrid from '../components/CardGrid'
+import PageFilters from '../components/PageFilters'
 
 export default function Rewards() {
   return (
@@ -11,6 +12,10 @@ export default function Rewards() {
       title="Rewards"
       subtitle="XP, badges, city exploration rewards, early-access perks, merchant offers, and achievement systems."
     >
+     <PageFilters
+  label="Categories"
+  options={['All', 'Progression', 'Achievements', 'Offers']}
+/>
       <CardGrid>
        <PageCTA />
         {rewardItems.map((item) => (
