@@ -4,10 +4,8 @@ import PageShell from '../components/PageShell'
 import InfoCard from '../components/InfoCard'
 import CardGrid from '../components/CardGrid'
 import PageCTA from '../components/PageCTA'
-import PageFilters from '../components/PageFilters'
-import SearchBox from '../components/SearchBox'
+import PageHero from '../components/PageHero'
 import EmptyState from '../components/EmptyState'
-import StatsStrip from '../components/StatsStrip'
 
 import { safetyItems } from '../data/safetyItems'
 
@@ -16,6 +14,13 @@ const filterOptions = [
   'Awareness',
   'Mobility',
   'Navigation',
+]
+
+const stats = [
+  { label: 'Signals', value: '3', detail: 'Awareness systems planned' },
+  { label: 'Transit', value: 'Monitored', detail: 'Mobility layer planned' },
+  { label: 'Routing', value: 'Adaptive', detail: 'Safer navigation focus' },
+  { label: 'Status', value: 'Developing', detail: 'Safety framework active' },
 ]
 
 export default function Safety() {
@@ -47,38 +52,27 @@ export default function Safety() {
       title="Safety"
       subtitle="Crowd awareness, alerts, safer navigation, transit visibility, and trusted experience signals."
     >
-
-<StatsStrip
-  stats={[
-    { label: 'Signals', value: '3', detail: 'Awareness systems planned' },
-    { label: 'Transit', value: 'Monitored', detail: 'Mobility layer planned' },
-    { label: 'Routing', value: 'Adaptive', detail: 'Safer navigation focus' },
-    { label: 'Status', value: 'Developing', detail: 'Safety framework active' },
-  ]}
-/>
-      <SearchBox
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Search safety signals..."
+      <PageHero
+        stats={stats}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        searchPlaceholder="Search safety signals..."
+        filterLabel="Categories"
+        filterOptions={filterOptions}
+        activeFilter={activeFilter}
+        setActiveFilter={setActiveFilter}
+        resultCount={filteredItems.length}
       />
 
-      <PageFilters
-  label="Categories"
-  options={filterOptions}
-  active={activeFilter}
-  onChange={setActiveFilter}
-  resultCount={filteredItems.length}
-/>
-
       {filteredItems.length > 0 ? (
-  <CardGrid>
-    {filteredItems.map((item) => (
-      <InfoCard key={item.title} {...item} />
-    ))}
-  </CardGrid>
-) : (
-  <EmptyState />
-)}
+        <CardGrid>
+          {filteredItems.map((item) => (
+            <InfoCard key={item.title} {...item} />
+          ))}
+        </CardGrid>
+      ) : (
+        <EmptyState />
+      )}
 
       <PageCTA />
     </PageShell>

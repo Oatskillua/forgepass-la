@@ -4,10 +4,8 @@ import PageShell from '../components/PageShell'
 import InfoCard from '../components/InfoCard'
 import CardGrid from '../components/CardGrid'
 import PageCTA from '../components/PageCTA'
-import PageFilters from '../components/PageFilters'
-import SearchBox from '../components/SearchBox'
+import PageHero from '../components/PageHero'
 import EmptyState from '../components/EmptyState'
-import StatsStrip from '../components/StatsStrip'
 
 import { discoverItems } from '../data/discoverItems'
 
@@ -16,6 +14,13 @@ const filterOptions = [
   'Neighborhood',
   'Coastal Route',
   'Entertainment',
+]
+
+const stats = [
+  { label: 'Zones', value: '3', detail: 'Initial discovery areas' },
+  { label: 'Focus', value: 'LA 2028', detail: 'Tourism expansion ready' },
+  { label: 'Mode', value: 'Curated', detail: 'Quality-first listings' },
+  { label: 'Status', value: 'MVP', detail: 'Foundation active' },
 ]
 
 export default function Discover() {
@@ -47,38 +52,27 @@ export default function Discover() {
       title="Discover LA"
       subtitle="Local discovery, neighborhoods, restaurants, nightlife, shopping districts, hidden gems, and curated city routes."
     >
-
-<StatsStrip
-  stats={[
-    { label: 'Zones', value: '3', detail: 'Initial discovery areas' },
-    { label: 'Focus', value: 'LA 2028', detail: 'Tourism expansion ready' },
-    { label: 'Mode', value: 'Curated', detail: 'Quality-first listings' },
-    { label: 'Status', value: 'MVP', detail: 'Foundation active' },
-  ]}
-/>
-      <SearchBox
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Search discovery zones..."
+      <PageHero
+        stats={stats}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        searchPlaceholder="Search discovery zones..."
+        filterLabel="Categories"
+        filterOptions={filterOptions}
+        activeFilter={activeFilter}
+        setActiveFilter={setActiveFilter}
+        resultCount={filteredItems.length}
       />
 
-      <PageFilters
-  label="Categories"
-  options={filterOptions}
-  active={activeFilter}
-  onChange={setActiveFilter}
-  resultCount={filteredItems.length}
-/>
-
       {filteredItems.length > 0 ? (
-  <CardGrid>
-    {filteredItems.map((item) => (
-      <InfoCard key={item.title} {...item} />
-    ))}
-  </CardGrid>
-) : (
-  <EmptyState />
-)}
+        <CardGrid>
+          {filteredItems.map((item) => (
+            <InfoCard key={item.title} {...item} />
+          ))}
+        </CardGrid>
+      ) : (
+        <EmptyState />
+      )}
 
       <PageCTA />
     </PageShell>

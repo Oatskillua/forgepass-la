@@ -4,10 +4,8 @@ import PageShell from '../components/PageShell'
 import InfoCard from '../components/InfoCard'
 import CardGrid from '../components/CardGrid'
 import PageCTA from '../components/PageCTA'
-import PageFilters from '../components/PageFilters'
-import SearchBox from '../components/SearchBox'
+import PageHero from '../components/PageHero'
 import EmptyState from '../components/EmptyState'
-import StatsStrip from '../components/StatsStrip'
 
 import { rewardItems } from '../data/rewardItems'
 
@@ -16,6 +14,13 @@ const filterOptions = [
   'Progression',
   'Achievements',
   'Offers',
+]
+
+const stats = [
+  { label: 'Systems', value: '3', detail: 'Reward layers designed' },
+  { label: 'Progression', value: 'XP', detail: 'User advancement planned' },
+  { label: 'Perks', value: 'Partner', detail: 'Merchant integrations planned' },
+  { label: 'Status', value: 'Building', detail: 'Reward engine foundation' },
 ]
 
 export default function Rewards() {
@@ -47,38 +52,27 @@ export default function Rewards() {
       title="Rewards"
       subtitle="XP, badges, city exploration rewards, early-access perks, merchant offers, and achievement systems."
     >
-
-<StatsStrip
-  stats={[
-    { label: 'Systems', value: '3', detail: 'Reward layers designed' },
-    { label: 'Progression', value: 'XP', detail: 'User advancement planned' },
-    { label: 'Perks', value: 'Partner', detail: 'Merchant integrations planned' },
-    { label: 'Status', value: 'Building', detail: 'Reward engine foundation' },
-  ]}
-/>
-      <SearchBox
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Search rewards..."
+      <PageHero
+        stats={stats}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        searchPlaceholder="Search rewards..."
+        filterLabel="Categories"
+        filterOptions={filterOptions}
+        activeFilter={activeFilter}
+        setActiveFilter={setActiveFilter}
+        resultCount={filteredItems.length}
       />
 
-      <PageFilters
-  label="Categories"
-  options={filterOptions}
-  active={activeFilter}
-  onChange={setActiveFilter}
-  resultCount={filteredItems.length}
-/>
-
       {filteredItems.length > 0 ? (
-  <CardGrid>
-    {filteredItems.map((item) => (
-      <InfoCard key={item.title} {...item} />
-    ))}
-  </CardGrid>
-) : (
-  <EmptyState />
-)}
+        <CardGrid>
+          {filteredItems.map((item) => (
+            <InfoCard key={item.title} {...item} />
+          ))}
+        </CardGrid>
+      ) : (
+        <EmptyState />
+      )}
 
       <PageCTA />
     </PageShell>
