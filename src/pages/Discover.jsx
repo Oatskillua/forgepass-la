@@ -6,6 +6,7 @@ import CardGrid from '../components/CardGrid'
 import PageCTA from '../components/PageCTA'
 import PageFilters from '../components/PageFilters'
 import SearchBox from '../components/SearchBox'
+import EmptyState from '../components/EmptyState'
 
 import { discoverItems } from '../data/discoverItems'
 
@@ -58,11 +59,15 @@ export default function Discover() {
         onChange={setActiveFilter}
       />
 
-      <CardGrid>
-        {filteredItems.map((item) => (
-          <InfoCard key={item.title} {...item} />
-        ))}
-      </CardGrid>
+      {filteredItems.length > 0 ? (
+  <CardGrid>
+    {filteredItems.map((item) => (
+      <InfoCard key={item.title} {...item} />
+    ))}
+  </CardGrid>
+) : (
+  <EmptyState />
+)}
 
       <PageCTA />
     </PageShell>
