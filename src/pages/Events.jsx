@@ -1,24 +1,24 @@
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import PageShell from '../components/PageShell'
 
 export default function Events() {
   return (
-    <div className="min-h-screen bg-[#070B14] text-white">
-      <Header />
-
-      <main className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-        <h1 className="text-5xl font-black text-cyan-300">
-          Events
-        </h1>
-
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-white/60">
-          Event access, Olympic-adjacent experiences, fan zones,
-          concerts, nightlife, and curated activity listings will
-          live here.
-        </p>
-      </main>
-
-      <Footer />
-    </div>
+    <PageShell
+      title="Events"
+      subtitle="Olympic-adjacent experiences, fan zones, concerts, nightlife, pop-ups, and curated activity listings."
+    >
+      <div className="grid gap-6 md:grid-cols-3">
+        {['Fan Zones', 'Nightlife', 'Live Experiences'].map((item) => (
+          <div
+            key={item}
+            className="rounded-3xl border border-white/10 bg-white/[0.04] p-6"
+          >
+            <h2 className="text-2xl font-bold">{item}</h2>
+            <p className="mt-4 text-white/55">
+              Coming soon.
+            </p>
+          </div>
+        ))}
+      </div>
+    </PageShell>
   )
 }
