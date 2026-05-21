@@ -5,6 +5,7 @@ import { rewardItems } from '../data/rewardItems'
 export default function Rewards() {
   return (
     <PageShell
+      eyebrow="Progression System"
       title="Rewards"
       subtitle="XP, badges, city exploration rewards, early-access perks, merchant offers, and achievement systems."
     >

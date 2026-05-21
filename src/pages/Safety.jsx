@@ -5,6 +5,7 @@ import { safetyItems } from '../data/safetyItems'
 export default function Safety() {
   return (
     <PageShell
+      eyebrow="Awareness Network"
       title="Safety"
       subtitle="Crowd awareness, alerts, safer navigation, transit visibility, and trusted experience signals."
     >

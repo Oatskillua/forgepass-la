@@ -5,6 +5,7 @@ import { eventItems } from '../data/eventItems'
 export default function Events() {
   return (
     <PageShell
+      eyebrow="Live Experiences"
       title="Events"
       subtitle="Olympic-adjacent experiences, fan zones, concerts, nightlife, pop-ups, and curated activity listings."
     >

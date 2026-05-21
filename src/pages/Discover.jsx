@@ -5,6 +5,7 @@ import { discoverItems } from '../data/discoverItems'
 export default function Discover() {
   return (
     <PageShell
+      eyebrow="City Discovery"
       title="Discover LA"
       subtitle="Local discovery, neighborhoods, restaurants, nightlife, shopping districts, hidden gems, and curated city routes."
     >
