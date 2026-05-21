@@ -1,10 +1,18 @@
+import { NavLink } from 'react-router-dom'
 import { Compass } from 'lucide-react'
+
+const navItems = [
+  { label: 'Discover', to: '/discover' },
+  { label: 'Events', to: '/events' },
+  { label: 'Rewards', to: '/rewards' },
+  { label: 'Safety', to: '/safety' },
+]
 
 export default function Header() {
   return (
     <header className="relative z-20 border-b border-white/10 bg-[#070B14]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <a href="/" className="flex items-center gap-3">
+        <NavLink to="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-cyan-300/30 bg-cyan-300/10">
             <Compass className="h-5 w-5 text-cyan-300" />
           </div>
@@ -17,23 +25,30 @@ export default function Header() {
               LA
             </p>
           </div>
-        </a>
+        </NavLink>
 
         <nav className="hidden items-center gap-8 text-sm text-white/60 md:flex">
-          <a href="#features" className="hover:text-cyan-300">
-            Features
-          </a>
-          <a href="#waitlist" className="hover:text-cyan-300">
-            Waitlist
-          </a>
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                isActive
+                  ? 'text-cyan-300'
+                  : 'transition hover:text-cyan-300'
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
         </nav>
 
-        <a
-          href="#waitlist"
+        <NavLink
+          to="/#waitlist"
           className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-bold text-black transition hover:scale-105"
         >
           Join
-        </a>
+        </NavLink>
       </div>
     </header>
   )
