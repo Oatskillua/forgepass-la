@@ -1,5 +1,6 @@
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import MobileNav from '../components/MobileNav'
 
 export default function AppLayout({ children }) {
   return (
@@ -9,12 +10,14 @@ export default function AppLayout({ children }) {
       <main className="relative z-10">
         <Header />
 
-        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <section className="mx-auto max-w-7xl px-5 py-20 pb-28 sm:px-6 lg:px-8">
           {children}
 
           <Footer />
         </section>
       </main>
+
+      <MobileNav />
     </div>
   )
 }
