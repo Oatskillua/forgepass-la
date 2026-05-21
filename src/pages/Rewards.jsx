@@ -53,11 +53,12 @@ export default function Rewards() {
       />
 
       <PageFilters
-        label="Categories"
-        options={filterOptions}
-        active={activeFilter}
-        onChange={setActiveFilter}
-      />
+  label="Categories"
+  options={filterOptions}
+  active={activeFilter}
+  onChange={setActiveFilter}
+  resultCount={filteredItems.length}
+/>
 
       {filteredItems.length > 0 ? (
   <CardGrid>
