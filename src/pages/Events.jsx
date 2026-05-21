@@ -2,6 +2,7 @@ import PageShell from '../components/PageShell'
 import InfoCard from '../components/InfoCard'
 import { eventItems } from '../data/eventItems'
 import PageCTA from '../components/PageCTA'
+import CardGrid from '../components/CardGrid'
 
 export default function Events() {
   return (
@@ -10,12 +11,12 @@ export default function Events() {
       title="Events"
       subtitle="Olympic-adjacent experiences, fan zones, concerts, nightlife, pop-ups, and curated activity listings."
     >
-      <div className="grid gap-6 md:grid-cols-3">
+      <CardGrid>
        <PageCTA />
         {eventItems.map((item) => (
           <InfoCard key={item.title} {...item} />
         ))}
-      </div>
+      </CardGrid>
     </PageShell>
   )
 }

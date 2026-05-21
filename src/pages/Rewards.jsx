@@ -2,6 +2,7 @@ import PageShell from '../components/PageShell'
 import InfoCard from '../components/InfoCard'
 import { rewardItems } from '../data/rewardItems'
 import PageCTA from '../components/PageCTA'
+import CardGrid from '../components/CardGrid'
 
 export default function Rewards() {
   return (
@@ -10,12 +11,12 @@ export default function Rewards() {
       title="Rewards"
       subtitle="XP, badges, city exploration rewards, early-access perks, merchant offers, and achievement systems."
     >
-      <div className="grid gap-6 md:grid-cols-3">
+      <CardGrid>
        <PageCTA />
         {rewardItems.map((item) => (
           <InfoCard key={item.title} {...item} />
         ))}
-      </div>
+      </CardGrid>
     </PageShell>
   )
 }
