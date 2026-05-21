@@ -1,5 +1,3 @@
-import { useMemo, useState } from 'react'
-
 import PageShell from '../components/PageShell'
 import InfoCard from '../components/InfoCard'
 import CardGrid from '../components/CardGrid'
@@ -8,6 +6,7 @@ import PageHero from '../components/PageHero'
 import EmptyState from '../components/EmptyState'
 
 import { eventItems } from '../data/eventItems'
+import { useFilteredItems } from '../hooks/useFilteredItems'
 
 const filterOptions = [
   'All',
@@ -24,27 +23,13 @@ const stats = [
 ]
 
 export default function Events() {
-  const [activeFilter, setActiveFilter] = useState('All')
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const filteredItems = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase()
-
-    return eventItems.filter((item) => {
-      const matchesFilter =
-        activeFilter === 'All' ||
-        item.category === activeFilter
-
-      const matchesSearch =
-        !query ||
-        item.title.toLowerCase().includes(query) ||
-        item.category.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query) ||
-        item.status.toLowerCase().includes(query)
-
-      return matchesFilter && matchesSearch
-    })
-  }, [activeFilter, searchQuery])
+  const {
+    activeFilter,
+    setActiveFilter,
+    searchQuery,
+    setSearchQuery,
+    filteredItems,
+  } = useFilteredItems(eventItems)
 
   return (
     <PageShell
