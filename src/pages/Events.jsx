@@ -7,6 +7,7 @@ import PageCTA from '../components/PageCTA'
 import PageFilters from '../components/PageFilters'
 import SearchBox from '../components/SearchBox'
 import EmptyState from '../components/EmptyState'
+import StatsStrip from '../components/StatsStrip'
 
 import { eventItems } from '../data/eventItems'
 
@@ -46,6 +47,15 @@ export default function Events() {
       title="Events"
       subtitle="Olympic-adjacent experiences, fan zones, concerts, nightlife, pop-ups, and curated activity listings."
     >
+
+<StatsStrip
+  stats={[
+    { label: 'Experiences', value: '3', detail: 'Event systems initialized' },
+    { label: 'Coverage', value: 'Citywide', detail: 'Olympic tourism focus' },
+    { label: 'Access', value: 'Live', detail: 'Real-time expansion planned' },
+    { label: 'Status', value: 'Active', detail: 'Event framework online' },
+  ]}
+/>
       <SearchBox
         value={searchQuery}
         onChange={setSearchQuery}

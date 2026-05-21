@@ -7,6 +7,7 @@ import PageCTA from '../components/PageCTA'
 import PageFilters from '../components/PageFilters'
 import SearchBox from '../components/SearchBox'
 import EmptyState from '../components/EmptyState'
+import StatsStrip from '../components/StatsStrip'
 
 import { discoverItems } from '../data/discoverItems'
 
@@ -46,6 +47,15 @@ export default function Discover() {
       title="Discover LA"
       subtitle="Local discovery, neighborhoods, restaurants, nightlife, shopping districts, hidden gems, and curated city routes."
     >
+
+<StatsStrip
+  stats={[
+    { label: 'Zones', value: '3', detail: 'Initial discovery areas' },
+    { label: 'Focus', value: 'LA 2028', detail: 'Tourism expansion ready' },
+    { label: 'Mode', value: 'Curated', detail: 'Quality-first listings' },
+    { label: 'Status', value: 'MVP', detail: 'Foundation active' },
+  ]}
+/>
       <SearchBox
         value={searchQuery}
         onChange={setSearchQuery}

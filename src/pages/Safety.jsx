@@ -7,6 +7,7 @@ import PageCTA from '../components/PageCTA'
 import PageFilters from '../components/PageFilters'
 import SearchBox from '../components/SearchBox'
 import EmptyState from '../components/EmptyState'
+import StatsStrip from '../components/StatsStrip'
 
 import { safetyItems } from '../data/safetyItems'
 
@@ -46,6 +47,15 @@ export default function Safety() {
       title="Safety"
       subtitle="Crowd awareness, alerts, safer navigation, transit visibility, and trusted experience signals."
     >
+
+<StatsStrip
+  stats={[
+    { label: 'Signals', value: '3', detail: 'Awareness systems planned' },
+    { label: 'Transit', value: 'Monitored', detail: 'Mobility layer planned' },
+    { label: 'Routing', value: 'Adaptive', detail: 'Safer navigation focus' },
+    { label: 'Status', value: 'Developing', detail: 'Safety framework active' },
+  ]}
+/>
       <SearchBox
         value={searchQuery}
         onChange={setSearchQuery}

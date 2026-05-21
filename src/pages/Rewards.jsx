@@ -7,6 +7,7 @@ import PageCTA from '../components/PageCTA'
 import PageFilters from '../components/PageFilters'
 import SearchBox from '../components/SearchBox'
 import EmptyState from '../components/EmptyState'
+import StatsStrip from '../components/StatsStrip'
 
 import { rewardItems } from '../data/rewardItems'
 
@@ -46,6 +47,15 @@ export default function Rewards() {
       title="Rewards"
       subtitle="XP, badges, city exploration rewards, early-access perks, merchant offers, and achievement systems."
     >
+
+<StatsStrip
+  stats={[
+    { label: 'Systems', value: '3', detail: 'Reward layers designed' },
+    { label: 'Progression', value: 'XP', detail: 'User advancement planned' },
+    { label: 'Perks', value: 'Partner', detail: 'Merchant integrations planned' },
+    { label: 'Status', value: 'Building', detail: 'Reward engine foundation' },
+  ]}
+/>
       <SearchBox
         value={searchQuery}
         onChange={setSearchQuery}
