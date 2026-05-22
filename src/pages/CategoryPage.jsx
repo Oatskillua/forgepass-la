@@ -4,6 +4,7 @@ import CardGrid from '../components/CardGrid'
 import PageCTA from '../components/PageCTA'
 import PageHero from '../components/PageHero'
 import EmptyState from '../components/EmptyState'
+import ContentSection from '../components/ContentSection'
 
 import { useFilteredItems } from '../hooks/useFilteredItems'
 
@@ -34,15 +35,20 @@ export default function CategoryPage({ config }) {
         resultCount={filteredItems.length}
       />
 
-      {filteredItems.length > 0 ? (
-        <CardGrid>
-          {filteredItems.map((item) => (
-            <InfoCard key={item.title} {...item} />
-          ))}
-        </CardGrid>
-      ) : (
-        <EmptyState />
-      )}
+      <ContentSection
+        title="Available Categories"
+        subtitle="Explore currently indexed platform content."
+      >
+        {filteredItems.length > 0 ? (
+          <CardGrid>
+            {filteredItems.map((item) => (
+              <InfoCard key={item.title} {...item} />
+            ))}
+          </CardGrid>
+        ) : (
+          <EmptyState />
+        )}
+      </ContentSection>
 
       <PageCTA />
     </PageShell>
