@@ -40,12 +40,12 @@ export default function Header() {
           ))}
         </nav>
 
-        <NavLink
-          to="/#waitlist"
-          className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-bold text-black transition hover:scale-105"
-        >
-          Join
-        </NavLink>
+        <a
+  href="/#waitlist"
+  className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-bold text-black transition hover:scale-105"
+>
+  Join
+</a>
       </div>
     </header>
   )
