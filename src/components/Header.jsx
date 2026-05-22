@@ -22,15 +22,17 @@ export default function Header() {
           </div>
         </NavLink>
 
-        <nav className="hidden items-center gap-8 text-sm text-white/60 md:flex">
+        <nav className="hidden items-center gap-3 text-sm text-white/60 md:flex">
           {navigationItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                isActive
-                  ? 'text-cyan-300'
-                  : 'transition hover:text-cyan-300'
+                `rounded-full px-3 py-2 transition ${
+                  isActive
+                    ? 'bg-cyan-300/10 text-cyan-300'
+                    : 'hover:bg-white/5 hover:text-cyan-300'
+                }`
               }
             >
               {item.label}
