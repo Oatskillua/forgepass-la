@@ -6,6 +6,7 @@ import PageHero from '../components/PageHero'
 import EmptyState from '../components/EmptyState'
 import ContentSection from '../components/ContentSection'
 import PageModule from '../components/PageModule'
+import RoadmapModule from '../components/RoadmapModule'
 
 import { useFilteredItems } from '../hooks/useFilteredItems'
 
@@ -50,6 +51,15 @@ export default function CategoryPage({ config }) {
           ) : (
             <EmptyState />
           )}
+        </PageModule>
+      </ContentSection>
+
+      <ContentSection
+        title="Roadmap"
+        subtitle="Upcoming platform systems planned for future releases."
+      >
+        <PageModule>
+          <RoadmapModule items={config.roadmap} />
         </PageModule>
       </ContentSection>
 
