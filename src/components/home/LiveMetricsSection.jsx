@@ -1,6 +1,8 @@
 import { Activity } from 'lucide-react'
+
 import { liveMetrics } from '../../data/liveMetrics'
 import { liveMetricsConfig } from '../../data/liveMetricsConfig'
+import HomeSectionHeader from './HomeSectionHeader'
 
 export default function LiveMetricsSection() {
   return (
@@ -11,13 +13,11 @@ export default function LiveMetricsSection() {
           {liveMetricsConfig.eyebrow}
         </div>
 
-        <h2 className="max-w-4xl text-4xl font-black tracking-tight sm:text-5xl">
-          {liveMetricsConfig.title}
-        </h2>
-
-        <p className="mt-5 max-w-3xl leading-8 text-white/60">
-          {liveMetricsConfig.description}
-        </p>
+        <HomeSectionHeader
+          title={liveMetricsConfig.title}
+          subtitle={liveMetricsConfig.description}
+          align="left"
+        />
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
