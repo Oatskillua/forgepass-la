@@ -2,6 +2,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import WaitlistForm from '../components/WaitlistForm'
 import MobileNav from '../components/MobileNav'
+import HomeRoadmapSection from '../components/home/HomeRoadmapSection'
 
 import HeroSection from '../components/home/HeroSection'
 import FeatureSection from '../components/home/FeatureSection'
@@ -26,6 +27,8 @@ export default function Home() {
           <SystemPreviewSection />
 
           <LiveMetricsSection />
+
+          <HomeRoadmapSection />
 
           <CityIntelligenceSection />
 
