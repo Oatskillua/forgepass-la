@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
+
 import { homeFeatures } from '../../data/homeFeatures'
+import HomeCard from './HomeCard'
 
 export default function FeatureSection() {
   return (
@@ -16,17 +18,18 @@ export default function FeatureSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.15 }}
-            className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-xl transition hover:border-cyan-300/30 sm:p-8"
           >
-            <Icon className="mb-5 h-9 w-9 text-cyan-300 sm:mb-6 sm:h-10 sm:w-10" />
+            <HomeCard className="h-full backdrop-blur-xl">
+              <Icon className="mb-5 h-9 w-9 text-cyan-300 sm:mb-6 sm:h-10 sm:w-10" />
 
-            <h3 className="mb-3 text-xl font-bold sm:mb-4 sm:text-2xl">
-              {feature.title}
-            </h3>
+              <h3 className="mb-3 text-xl font-bold sm:mb-4 sm:text-2xl">
+                {feature.title}
+              </h3>
 
-            <p className="text-sm leading-7 text-white/60 sm:text-base sm:leading-8">
-              {feature.text}
-            </p>
+              <p className="text-sm leading-7 text-white/60 sm:text-base sm:leading-8">
+                {feature.text}
+              </p>
+            </HomeCard>
           </motion.div>
         )
       })}
