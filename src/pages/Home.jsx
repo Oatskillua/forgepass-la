@@ -6,6 +6,7 @@ import MobileNav from '../components/MobileNav'
 import HeroSection from '../components/home/HeroSection'
 import FeatureSection from '../components/home/FeatureSection'
 import SystemPreviewSection from '../components/home/SystemPreviewSection'
+import LiveMetricsSection from '../components/home/LiveMetricsSection'
 import CityIntelligenceSection from '../components/home/CityIntelligenceSection'
 import TrustStrip from '../components/home/TrustStrip'
 
@@ -23,6 +24,8 @@ export default function Home() {
           <FeatureSection />
 
           <SystemPreviewSection />
+
+          <LiveMetricsSection />
 
           <CityIntelligenceSection />
 
