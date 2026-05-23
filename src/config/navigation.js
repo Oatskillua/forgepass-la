@@ -3,6 +3,7 @@ import {
   CalendarDays,
   Gift,
   ShieldCheck,
+  Activity,
 } from 'lucide-react'
 
 export const navigationItems = [
@@ -25,5 +26,10 @@ export const navigationItems = [
     label: 'Safety',
     to: '/safety',
     icon: ShieldCheck,
+  },
+  {
+    label: 'Status',
+    to: '/status',
+    icon: Activity,
   },
 ]

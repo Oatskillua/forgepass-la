@@ -19,4 +19,8 @@ export const routeMeta = {
     title: 'Safety',
     description: 'Crowd signals, transit alerts, and trusted navigation systems.',
   },
+  '/status': {
+    title: 'Status',
+    description: 'ForgePass LA production and roadmap status.',
+  },
 }

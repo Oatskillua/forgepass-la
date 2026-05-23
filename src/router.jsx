@@ -5,6 +5,7 @@ import Discover from './pages/Discover'
 import Events from './pages/Events'
 import Rewards from './pages/Rewards'
 import Safety from './pages/Safety'
+import Status from './pages/Status'
 
 export const router = createBrowserRouter([
   {
@@ -26,5 +27,9 @@ export const router = createBrowserRouter([
   {
     path: '/safety',
     element: <Safety />,
+  },
+  {
+    path: '/status',
+    element: <Status />,
   },
 ])
