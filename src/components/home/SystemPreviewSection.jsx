@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Compass, CalendarDays, Gift, ShieldCheck } from 'lucide-react'
+import { ArrowRight, Compass, CalendarDays, Gift, ShieldCheck, Activity } from 'lucide-react'
 
 const systems = [
   {
@@ -26,6 +26,12 @@ const systems = [
     to: '/safety',
     icon: ShieldCheck,
   },
+  {
+  title: 'Status',
+  text: 'Track production readiness, build progress, and upcoming platform phases.',
+  to: '/status',
+  icon: Activity,
+},
 ]
 
 export default function SystemPreviewSection() {
@@ -37,7 +43,7 @@ export default function SystemPreviewSection() {
         </p>
 
         <h2 className="text-4xl font-black tracking-tight sm:text-5xl">
-          One Platform. Four Core Layers.
+          One Platform. Five Core Layers.
         </h2>
 
         <p className="mx-auto mt-5 max-w-3xl text-white/60">

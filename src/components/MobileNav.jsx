@@ -5,7 +5,7 @@ import { navigationItems } from '../config/navigation'
 export default function MobileNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-[#070B14]/90 backdrop-blur-xl md:hidden">
-      <div className="grid grid-cols-4">
+      <div className="grid grid-cols-5">
         {navigationItems.map((item) => {
           const Icon = item.icon
 
