@@ -1,38 +1,6 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Compass, CalendarDays, Gift, ShieldCheck, Activity } from 'lucide-react'
-
-const systems = [
-  {
-    title: 'Discover',
-    text: 'Explore neighborhoods, hidden gems, local districts, and curated routes.',
-    to: '/discover',
-    icon: Compass,
-  },
-  {
-    title: 'Events',
-    text: 'Track experiences, fan zones, nightlife, concerts, and pop-ups.',
-    to: '/events',
-    icon: CalendarDays,
-  },
-  {
-    title: 'Rewards',
-    text: 'Build XP, badges, perks, and future partner reward systems.',
-    to: '/rewards',
-    icon: Gift,
-  },
-  {
-    title: 'Safety',
-    text: 'View crowd signals, transit alerts, and trusted navigation layers.',
-    to: '/safety',
-    icon: ShieldCheck,
-  },
-  {
-  title: 'Status',
-  text: 'Track production readiness, build progress, and upcoming platform phases.',
-  to: '/status',
-  icon: Activity,
-},
-]
+import { ArrowRight } from 'lucide-react'
+import { homeSystems } from '../../data/homeSystems'
 
 export default function SystemPreviewSection() {
   return (
@@ -53,7 +21,7 @@ export default function SystemPreviewSection() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-        {systems.map((system) => {
+        {homeSystems.map((system) => {
           const Icon = system.icon
 
           return (
