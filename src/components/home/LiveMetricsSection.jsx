@@ -1,5 +1,6 @@
 import { Activity } from 'lucide-react'
 import { liveMetrics } from '../../data/liveMetrics'
+import { liveMetricsConfig } from '../../data/liveMetricsConfig'
 
 export default function LiveMetricsSection() {
   return (
@@ -7,17 +8,15 @@ export default function LiveMetricsSection() {
       <div className="mb-10">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.25em] text-cyan-300">
           <Activity className="h-4 w-4" />
-          Live Platform Snapshot
+          {liveMetricsConfig.eyebrow}
         </div>
 
         <h2 className="max-w-4xl text-4xl font-black tracking-tight sm:text-5xl">
-          Built to become a real-time city operating layer.
+          {liveMetricsConfig.title}
         </h2>
 
         <p className="mt-5 max-w-3xl leading-8 text-white/60">
-          These metrics are currently staged as static MVP indicators.
-          The architecture is prepared to evolve into live feeds for events,
-          rewards, safety, transit, and city intelligence.
+          {liveMetricsConfig.description}
         </p>
       </div>
 
