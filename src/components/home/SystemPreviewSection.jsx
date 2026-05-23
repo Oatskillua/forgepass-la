@@ -1,26 +1,19 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
+
 import { homeSystems } from '../../data/homeSystems'
+import HomeSectionHeader from './HomeSectionHeader'
 
 export default function SystemPreviewSection() {
   return (
     <section className="mb-20 lg:mb-32">
-      <div className="mb-10 text-center">
-        <p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-cyan-300">
-          Platform Systems
-        </p>
+      <HomeSectionHeader
+        eyebrow="Platform Systems"
+        title="One Platform. Five Core Layers."
+        subtitle="ForgePass LA is being structured as a modular city-access system for discovery, events, rewards, safety, and operational visibility."
+      />
 
-        <h2 className="text-4xl font-black tracking-tight sm:text-5xl">
-          One Platform. Five Core Layers.
-        </h2>
-
-        <p className="mx-auto mt-5 max-w-3xl text-white/60">
-          ForgePass LA is being structured as a modular city-access system
-          for discovery, events, rewards, and real-time awareness.
-        </p>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5">
         {homeSystems.map((system) => {
           const Icon = system.icon
 
