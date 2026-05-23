@@ -2,6 +2,18 @@ import { Zap } from 'lucide-react'
 
 import { citySystems } from '../../data/citySystems'
 import { cityIntelligenceConfig } from '../../data/cityIntelligenceConfig'
+import { cityStatus } from '../../data/cityStatus'
+
+const metricToneStyles = {
+  cyan: 'border-cyan-300/20 bg-cyan-400/10 text-cyan-300',
+  white: 'border-white/10 bg-white/5 text-white',
+}
+
+const zoneToneStyles = {
+  cyan: 'text-cyan-300',
+  green: 'text-green-300',
+  white: 'text-white',
+}
 
 export default function CityIntelligenceSection() {
   return (
@@ -54,11 +66,11 @@ export default function CityIntelligenceSection() {
               <div className="mb-6 flex items-center justify-between sm:mb-8">
                 <div>
                   <p className="text-xs text-white/40 sm:text-sm">
-                    Active City Status
+                    {cityStatus.statusLabel}
                   </p>
 
                   <h3 className="mt-1 text-xl font-bold sm:text-2xl">
-                    Los Angeles
+                    {cityStatus.city}
                   </h3>
                 </div>
 
@@ -66,42 +78,43 @@ export default function CityIntelligenceSection() {
               </div>
 
               <div className="mb-6 grid grid-cols-1 gap-4 sm:mb-8 sm:grid-cols-2">
-                <div className="rounded-2xl border border-cyan-300/20 bg-cyan-400/10 p-4">
-                  <p className="mb-1 text-xs text-white/50 sm:text-sm">
-                    Crowd Activity
-                  </p>
+                {cityStatus.metrics.map((metric) => (
+                  <div
+                    key={metric.label}
+                    className={`rounded-2xl border p-4 ${
+                      metricToneStyles[metric.tone] ||
+                      metricToneStyles.white
+                    }`}
+                  >
+                    <p className="mb-1 text-xs text-white/50 sm:text-sm">
+                      {metric.label}
+                    </p>
 
-                  <h4 className="text-2xl font-black text-cyan-300 sm:text-3xl">
-                    Moderate
-                  </h4>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="mb-1 text-xs text-white/50 sm:text-sm">
-                    Transit
-                  </p>
-
-                  <h4 className="text-2xl font-black sm:text-3xl">
-                    Stable
-                  </h4>
-                </div>
+                    <h4 className="text-2xl font-black sm:text-3xl">
+                      {metric.value}
+                    </h4>
+                  </div>
+                ))}
               </div>
 
               <div className="space-y-3 sm:space-y-4">
-                <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 text-sm sm:text-base">
-                  <span>Olympic Village</span>
-                  <span className="text-cyan-300">Active</span>
-                </div>
+                {cityStatus.zones.map((zone) => (
+                  <div
+                    key={zone.name}
+                    className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 text-sm sm:text-base"
+                  >
+                    <span>{zone.name}</span>
 
-                <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 text-sm sm:text-base">
-                  <span>LA Live District</span>
-                  <span className="text-cyan-300">Moderate</span>
-                </div>
-
-                <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 text-sm sm:text-base">
-                  <span>Santa Monica</span>
-                  <span className="text-green-300">Clear</span>
-                </div>
+                    <span
+                      className={
+                        zoneToneStyles[zone.tone] ||
+                        zoneToneStyles.white
+                      }
+                    >
+                      {zone.status}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
