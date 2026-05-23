@@ -2,6 +2,7 @@ import { liveMetrics } from '../../data/liveMetrics'
 import { liveMetricsConfig } from '../../data/liveMetricsConfig'
 import HomeSectionHeader from './HomeSectionHeader'
 import HomeCard from './HomeCard'
+import Badge from '../Badge'
 
 export default function LiveMetricsSection() {
   return (
@@ -16,9 +17,9 @@ export default function LiveMetricsSection() {
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {liveMetrics.map((metric) => (
           <HomeCard key={metric.label}>
-            <div className="mb-5 inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-bold text-cyan-300">
+            <Badge tone="cyan" className="mb-5">
               {metric.status}
-            </div>
+            </Badge>
 
             <p className="text-sm uppercase tracking-[0.2em] text-white/35">
               {metric.label}
