@@ -1,0 +1,79 @@
+import { Link } from 'react-router-dom'
+import { ArrowRight, Compass, CalendarDays, Gift, ShieldCheck } from 'lucide-react'
+
+const systems = [
+  {
+    title: 'Discover',
+    text: 'Explore neighborhoods, hidden gems, local districts, and curated routes.',
+    to: '/discover',
+    icon: Compass,
+  },
+  {
+    title: 'Events',
+    text: 'Track experiences, fan zones, nightlife, concerts, and pop-ups.',
+    to: '/events',
+    icon: CalendarDays,
+  },
+  {
+    title: 'Rewards',
+    text: 'Build XP, badges, perks, and future partner reward systems.',
+    to: '/rewards',
+    icon: Gift,
+  },
+  {
+    title: 'Safety',
+    text: 'View crowd signals, transit alerts, and trusted navigation layers.',
+    to: '/safety',
+    icon: ShieldCheck,
+  },
+]
+
+export default function SystemPreviewSection() {
+  return (
+    <section className="mb-20 lg:mb-32">
+      <div className="mb-10 text-center">
+        <p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-cyan-300">
+          Platform Systems
+        </p>
+
+        <h2 className="text-4xl font-black tracking-tight sm:text-5xl">
+          One Platform. Four Core Layers.
+        </h2>
+
+        <p className="mx-auto mt-5 max-w-3xl text-white/60">
+          ForgePass LA is being structured as a modular city-access system
+          for discovery, events, rewards, and real-time awareness.
+        </p>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        {systems.map((system) => {
+          const Icon = system.icon
+
+          return (
+            <Link
+              key={system.to}
+              to={system.to}
+              className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-cyan-300/30 hover:bg-white/[0.07]"
+            >
+              <Icon className="mb-5 h-8 w-8 text-cyan-300" />
+
+              <h3 className="text-2xl font-bold">
+                {system.title}
+              </h3>
+
+              <p className="mt-4 text-sm leading-7 text-white/55">
+                {system.text}
+              </p>
+
+              <div className="mt-6 flex items-center gap-2 text-sm font-bold text-cyan-300">
+                Explore
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </Link>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
