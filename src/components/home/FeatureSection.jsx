@@ -1,23 +1,5 @@
 import { motion } from 'framer-motion'
-import { MapPin, Shield, Ticket } from 'lucide-react'
-
-const features = [
-  {
-    icon: Ticket,
-    title: 'Event Access',
-    text: 'Discover sports, nightlife, concerts, fan zones, and Olympic tourism experiences across Los Angeles.',
-  },
-  {
-    icon: MapPin,
-    title: 'Local Discovery',
-    text: 'Find hidden gems, restaurants, shopping districts, and curated city experiences.',
-  },
-  {
-    icon: Shield,
-    title: 'Trusted Platform',
-    text: 'Secure onboarding, verified experiences, crowd visibility, and safer navigation systems.',
-  },
-]
+import { homeFeatures } from '../../data/homeFeatures'
 
 export default function FeatureSection() {
   return (
@@ -25,7 +7,7 @@ export default function FeatureSection() {
       id="features"
       className="mb-20 grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3 lg:mb-28"
     >
-      {features.map((feature, index) => {
+      {homeFeatures.map((feature, index) => {
         const Icon = feature.icon
 
         return (
