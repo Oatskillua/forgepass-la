@@ -1,27 +1,7 @@
-import { Bell, Globe, Route, Trophy, Zap } from 'lucide-react'
+import { Zap } from 'lucide-react'
 
-const systems = [
-  {
-    icon: Globe,
-    title: 'Live City Intelligence',
-    text: 'Real-time awareness for events, traffic, transit, and city movement.',
-  },
-  {
-    icon: Route,
-    title: 'Smart Navigation',
-    text: 'Optimized travel routes and congestion-aware movement through LA.',
-  },
-  {
-    icon: Trophy,
-    title: 'Rewards Engine',
-    text: 'Earn rewards, achievements, and perks through exploration.',
-  },
-  {
-    icon: Bell,
-    title: 'Alerts + Notifications',
-    text: 'Updates on schedules, crowds, venue changes, and safety alerts.',
-  },
-]
+import { citySystems } from '../../data/citySystems'
+import { cityIntelligenceConfig } from '../../data/cityIntelligenceConfig'
 
 export default function CityIntelligenceSection() {
   return (
@@ -30,28 +10,22 @@ export default function CityIntelligenceSection() {
         <div>
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 sm:mb-8">
             <Zap className="h-4 w-4 shrink-0 text-cyan-300" />
+
             <span className="text-xs text-white/70 sm:text-sm">
-              Real-Time Infrastructure
+              {cityIntelligenceConfig.eyebrow}
             </span>
           </div>
 
           <h2 className="mb-6 text-3xl font-black leading-tight sm:text-4xl md:text-5xl lg:mb-8 lg:text-6xl">
-            Built for the
-            <br />
-            Next Generation
-            <br />
-            of City Navigation
+            {cityIntelligenceConfig.title}
           </h2>
 
           <p className="mb-8 text-base leading-8 text-white/60 sm:text-lg sm:leading-9 lg:mb-10">
-            ForgePass LA is designed to help visitors, tourists, residents,
-            and event attendees move through Los Angeles with greater
-            awareness, efficiency, safety, and discovery during one of the
-            largest tourism expansions in modern US history.
+            {cityIntelligenceConfig.description}
           </p>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
-            {systems.map((system) => {
+            {citySystems.map((system) => {
               const Icon = system.icon
 
               return (
