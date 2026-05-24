@@ -1,3 +1,5 @@
+import Badge from '../Badge'
+
 export default function HomeSectionHeader({
   eyebrow,
   title,
@@ -17,9 +19,9 @@ export default function HomeSectionHeader({
   return (
     <div className={`mb-10 ${alignment}`}>
       {eyebrow && (
-        <p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-cyan-300">
+        <Badge tone="cyan" className="mb-4 uppercase tracking-[0.25em]">
           {eyebrow}
-        </p>
+        </Badge>
       )}
 
       <h2 className="text-4xl font-black tracking-tight sm:text-5xl">
