@@ -1,6 +1,7 @@
 import { liveMetrics } from '../../data/liveMetrics'
 import { liveMetricsConfig } from '../../data/liveMetricsConfig'
 
+import HomeSection from './HomeSection'
 import HomeSectionHeader from './HomeSectionHeader'
 import HomeCard from './HomeCard'
 import HomeGrid from './HomeGrid'
@@ -9,7 +10,7 @@ import Badge from '../Badge'
 
 export default function LiveMetricsSection() {
   return (
-    <section className="mb-20 lg:mb-32">
+    <HomeSection>
       <HomeSectionHeader
         eyebrow={liveMetricsConfig.eyebrow}
         title={liveMetricsConfig.title}
@@ -38,6 +39,6 @@ export default function LiveMetricsSection() {
           </HomeCard>
         ))}
       </HomeGrid>
-    </section>
+    </HomeSection>
   )
 }

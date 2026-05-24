@@ -1,12 +1,14 @@
 import RoadmapModule from '../RoadmapModule'
 import PageModule from '../PageModule'
-import HomeSectionHeader from './HomeSectionHeader'
 
 import { homeRoadmapItems } from '../../data/homeRoadmapItems'
 
+import HomeSection from './HomeSection'
+import HomeSectionHeader from './HomeSectionHeader'
+
 export default function HomeRoadmapSection() {
   return (
-    <section className="mb-20 lg:mb-32">
+    <HomeSection>
       <HomeSectionHeader
         eyebrow="Build Roadmap"
         title="From waitlist to city access platform."
@@ -16,6 +18,6 @@ export default function HomeRoadmapSection() {
       <PageModule>
         <RoadmapModule items={homeRoadmapItems} />
       </PageModule>
-    </section>
+    </HomeSection>
   )
 }

@@ -2,13 +2,15 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 
 import { homeSystems } from '../../data/homeSystems'
+
+import HomeSection from './HomeSection'
 import HomeSectionHeader from './HomeSectionHeader'
 import HomeCard from './HomeCard'
 import HomeGrid from './HomeGrid'
 
 export default function SystemPreviewSection() {
   return (
-    <section className="mb-20 lg:mb-32">
+    <HomeSection>
       <HomeSectionHeader
         eyebrow="Platform Systems"
         title="One Platform. Five Core Layers."
@@ -41,6 +43,6 @@ export default function SystemPreviewSection() {
           )
         })}
       </HomeGrid>
-    </section>
+    </HomeSection>
   )
 }
