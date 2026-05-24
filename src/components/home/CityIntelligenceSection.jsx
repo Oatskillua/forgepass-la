@@ -3,6 +3,7 @@ import { Zap } from 'lucide-react'
 import { citySystems } from '../../data/citySystems'
 import { cityIntelligenceConfig } from '../../data/cityIntelligenceConfig'
 import { cityStatus } from '../../data/cityStatus'
+import HomeSection from './HomeSection'
 
 const metricToneStyles = {
   cyan: 'border-cyan-300/20 bg-cyan-400/10 text-cyan-300',
@@ -17,7 +18,7 @@ const zoneToneStyles = {
 
 export default function CityIntelligenceSection() {
   return (
-    <section className="mb-20 lg:mb-32">
+    <HomeSection>
       <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
         <div>
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 sm:mb-8">
@@ -120,6 +121,6 @@ export default function CityIntelligenceSection() {
           </div>
         </div>
       </div>
-    </section>
+    </HomeSection>
   )
 }
