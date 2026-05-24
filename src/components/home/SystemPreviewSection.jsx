@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react'
 import { homeSystems } from '../../data/homeSystems'
 import HomeSectionHeader from './HomeSectionHeader'
 import HomeCard from './HomeCard'
+import HomeGrid from './HomeGrid'
 
 export default function SystemPreviewSection() {
   return (
@@ -14,7 +15,7 @@ export default function SystemPreviewSection() {
         subtitle="ForgePass LA is being structured as a modular city-access system for discovery, events, rewards, safety, and operational visibility."
       />
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5">
+      <HomeGrid columns="five" className="gap-6">
         {homeSystems.map((system) => {
           const Icon = system.icon
 
@@ -39,7 +40,7 @@ export default function SystemPreviewSection() {
             </Link>
           )
         })}
-      </div>
+      </HomeGrid>
     </section>
   )
 }
