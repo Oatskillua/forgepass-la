@@ -1,7 +1,10 @@
 import { liveMetrics } from '../../data/liveMetrics'
 import { liveMetricsConfig } from '../../data/liveMetricsConfig'
+
 import HomeSectionHeader from './HomeSectionHeader'
 import HomeCard from './HomeCard'
+import HomeGrid from './HomeGrid'
+
 import Badge from '../Badge'
 
 export default function LiveMetricsSection() {
@@ -14,7 +17,7 @@ export default function LiveMetricsSection() {
         align="left"
       />
 
-      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <HomeGrid columns="four">
         {liveMetrics.map((metric) => (
           <HomeCard key={metric.label}>
             <Badge tone="cyan" className="mb-5">
@@ -34,7 +37,7 @@ export default function LiveMetricsSection() {
             </p>
           </HomeCard>
         ))}
-      </div>
+      </HomeGrid>
     </section>
   )
 }
