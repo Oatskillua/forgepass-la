@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-
+import { analyticsEvents } from '../../config/analyticsEvents'
 import { homeSystems } from '../../data/homeSystems'
 import { trackEvent } from '../../lib/analytics'
 import HomeSection from './HomeSection'
@@ -26,7 +26,7 @@ export default function SystemPreviewSection() {
              key={system.to}
              to={system.to}
              onClick={() =>
-               trackEvent('home_system_clicked', {
+               trackEvent(analyticsEvents.HOME_SYSTEM_CLICKED, {
                 route: system.to,
                 title: system.title,
               })

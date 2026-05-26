@@ -2,12 +2,12 @@ import RoadmapModule from '../RoadmapModule'
 import PageModule from '../PageModule'
 import { useTrackOnce } from '../../hooks/useTrackOnce'
 import { homeRoadmapItems } from '../../data/homeRoadmapItems'
-
+import { analyticsEvents } from '../../config/analyticsEvents'
 import HomeSection from './HomeSection'
 import HomeSectionHeader from './HomeSectionHeader'
 
 export default function HomeRoadmapSection() {
-  useTrackOnce('home_roadmap_viewed')
+  useTrackOnce(analyticsEvents.HOME_ROADMAP_VIEWED)
   return (
     <HomeSection>
       <HomeSectionHeader

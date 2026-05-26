@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Sparkles } from 'lucide-react'
-
+import { analyticsEvents } from '../../config/analyticsEvents'
 import { trackEvent } from '../../lib/analytics'
 
 export default function HeroSection() {
@@ -38,7 +38,7 @@ export default function HeroSection() {
       <div className="mb-14 flex flex-col justify-center gap-4 sm:mb-20 sm:flex-row sm:gap-5">
         <a
           href="#waitlist"
-          onClick={() => trackEvent('hero_cta_join_clicked')}
+          onClick={() => trackEvent(analyticsEvents.HERO_CTA_JOIN_CLICKED)}
           className="rounded-2xl bg-cyan-300 px-6 py-4 text-base font-bold text-black shadow-[0_0_40px_rgba(0,255,255,0.25)] transition hover:scale-105 sm:px-8 sm:text-lg"
         >
           Join Early Access
@@ -46,7 +46,7 @@ export default function HeroSection() {
 
         <a
           href="#features"
-          onClick={() => trackEvent('hero_cta_explore_clicked')}
+          onClick={() => trackEvent(analyticsEvents.HERO_CTA_EXPLORE_CLICKED)}
           className="rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-base font-semibold backdrop-blur-md transition hover:bg-white/10 sm:px-8 sm:text-lg"
         >
           Explore Features
