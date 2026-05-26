@@ -1,5 +1,5 @@
 import { Zap } from 'lucide-react'
-
+import { useTrackOnce } from '../../hooks/useTrackOnce'
 import { citySystems } from '../../data/citySystems'
 import { cityIntelligenceConfig } from '../../data/cityIntelligenceConfig'
 import { cityStatus } from '../../data/cityStatus'
@@ -17,6 +17,7 @@ const zoneToneStyles = {
 }
 
 export default function CityIntelligenceSection() {
+ useTrackOnce('home_city_intelligence_viewed')
   return (
     <HomeSection>
       <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
