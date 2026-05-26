@@ -1,8 +1,23 @@
 import StatusBadge from './StatusBadge'
 
-export default function InfoCard({ title, category, description, status }) {
+import { trackEvent } from '../lib/analytics'
+
+export default function InfoCard({
+  title,
+  category,
+  description,
+  status,
+}) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-cyan-300/30">
+    <div
+      onClick={() =>
+        trackEvent('info_card_clicked', {
+          title,
+          status,
+        })
+      }
+      className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-cyan-300/30"
+    >
       <StatusBadge status={status} />
 
       <p className="mb-2 text-sm uppercase tracking-[0.2em] text-white/35">
