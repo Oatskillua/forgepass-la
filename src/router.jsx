@@ -6,6 +6,7 @@ import Events from './pages/Events'
 import Rewards from './pages/Rewards'
 import Safety from './pages/Safety'
 import Status from './pages/Status'
+import Health from './pages/Health'
 import NotFound from './pages/NotFound'
 import ErrorFallback from './components/ErrorFallback'
 
@@ -38,6 +39,11 @@ export const router = createBrowserRouter([
     path: '/status',
     element: <Status />,
     errorElement: <ErrorFallback />,
+  },
+  {
+  path: '/health',
+  element: <Health />,
+  errorElement: <ErrorFallback />,
   },
   {
     path: '*',

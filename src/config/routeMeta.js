@@ -23,4 +23,8 @@ export const routeMeta = {
     title: 'Status',
     description: 'ForgePass LA production and roadmap status.',
   },
+  '/health': {
+  title: 'Health',
+  description: 'ForgePass LA production health check.',
+  },
 }
