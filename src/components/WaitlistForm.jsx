@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Trophy } from 'lucide-react'
+
 import { supabase } from '../lib/supabase'
+import { trackEvent } from '../lib/analytics'
 
 export default function WaitlistForm() {
   const [submitted, setSubmitted] = useState(false)
@@ -27,6 +29,7 @@ export default function WaitlistForm() {
 
   const onSubmit = async (e) => {
     e.preventDefault()
+
     setErrorMessage('')
     setSubmitted(false)
 
@@ -50,15 +53,31 @@ export default function WaitlistForm() {
 
     if (error) {
       if (error.code === '23505') {
+        trackEvent('waitlist_duplicate_email', {
+          interest: form.interest,
+        })
+
         setErrorMessage('This email is already on the waitlist.')
+
         return
       }
 
+      trackEvent('waitlist_submit_failed', {
+        code: error.code,
+        message: error.message,
+      })
+
       setErrorMessage(error.message || 'Submission failed. Try again.')
+
       return
     }
 
     setSubmitted(true)
+
+    trackEvent('waitlist_joined', {
+      interest: form.interest,
+      city: form.city.trim(),
+    })
 
     setForm({
       name: '',
@@ -69,8 +88,8 @@ export default function WaitlistForm() {
   }
 
   return (
-    <div className="max-w-xl mx-auto p-8 rounded-3xl bg-white/5 border border-white/10">
-      <h2 className="text-3xl font-bold mb-6">
+    <div className="mx-auto max-w-xl rounded-3xl border border-white/10 bg-white/5 p-8">
+      <h2 className="mb-6 text-3xl font-bold">
         Join the Waitlist
       </h2>
 
@@ -81,7 +100,7 @@ export default function WaitlistForm() {
           placeholder="Name"
           value={form.name}
           onChange={handleChange}
-          className="w-full px-4 py-4 rounded-2xl bg-black/20 border border-white/10 outline-none"
+          className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-4 outline-none"
         />
 
         <input
@@ -91,7 +110,7 @@ export default function WaitlistForm() {
           required
           value={form.email}
           onChange={handleChange}
-          className="w-full px-4 py-4 rounded-2xl bg-black/20 border border-white/10 outline-none"
+          className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-4 outline-none"
         />
 
         <input
@@ -100,14 +119,14 @@ export default function WaitlistForm() {
           placeholder="City"
           value={form.city}
           onChange={handleChange}
-          className="w-full px-4 py-4 rounded-2xl bg-black/20 border border-white/10 outline-none"
+          className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-4 outline-none"
         />
 
         <select
           name="interest"
           value={form.interest}
           onChange={handleChange}
-          className="w-full px-4 py-4 rounded-2xl bg-black/20 border border-white/10 outline-none"
+          className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-4 outline-none"
         >
           <option>Events</option>
           <option>Nightlife</option>
@@ -123,10 +142,10 @@ export default function WaitlistForm() {
         )}
 
         {submitted && (
-          <div className="py-6">
-            <Trophy className="w-12 h-12 mx-auto mb-4" />
+          <div className="py-6 text-center">
+            <Trophy className="mx-auto mb-4 h-12 w-12" />
 
-            <h3 className="text-2xl font-bold mb-2">
+            <h3 className="mb-2 text-2xl font-bold">
               You're In
             </h3>
 
@@ -139,7 +158,7 @@ export default function WaitlistForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-4 rounded-2xl bg-white text-black font-bold hover:scale-[1.02] transition disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full rounded-2xl bg-white py-4 font-bold text-black transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? 'Submitting...' : 'Join Waitlist'}
         </button>
