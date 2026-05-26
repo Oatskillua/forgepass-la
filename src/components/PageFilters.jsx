@@ -1,3 +1,5 @@
+import { trackEvent } from '../lib/analytics'
+
 export default function PageFilters({
   label = 'Filter',
   options = [],
@@ -19,7 +21,14 @@ export default function PageFilters({
             <button
               key={option}
               type="button"
-              onClick={() => onChange(option)}
+              onClick={() => {
+                onChange(option)
+
+                trackEvent('category_filter_clicked', {
+                  label,
+                  option,
+                })
+              }}
               className={`rounded-full border px-4 py-2 text-sm transition ${
                 isActive
                   ? 'border-cyan-300/30 bg-cyan-300/10 text-cyan-300'

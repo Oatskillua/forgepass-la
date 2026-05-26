@@ -1,5 +1,7 @@
 import { Search } from 'lucide-react'
 
+import { trackEvent } from '../lib/analytics'
+
 export default function SearchBox({
   value,
   onChange,
@@ -11,8 +13,14 @@ export default function SearchBox({
 
       <input
         value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
+        onChange={(event) => {
+          onChange(event.target.value)
+
+          trackEvent('search_used', {
+            placeholder,
+            length: event.target.value.length,
+          })
+        }}
         className="w-full bg-transparent text-white outline-none placeholder:text-white/30"
       />
     </div>
