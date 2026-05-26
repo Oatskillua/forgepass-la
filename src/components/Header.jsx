@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { Compass } from 'lucide-react'
 
 import { navigationItems } from '../config/navigation'
+import { trackEvent } from '../lib/analytics'
 
 export default function Header() {
   return (
@@ -16,6 +17,7 @@ export default function Header() {
             <p className="text-sm font-black tracking-[0.22em] text-white">
               FORGEPASS
             </p>
+
             <p className="text-xs tracking-[0.35em] text-cyan-300">
               LA
             </p>
@@ -27,6 +29,13 @@ export default function Header() {
             <NavLink
               key={item.to}
               to={item.to}
+              onClick={() =>
+                trackEvent('navigation_clicked', {
+                  location: 'header',
+                  route: item.to,
+                  label: item.label,
+                })
+              }
               className={({ isActive }) =>
                 `rounded-full px-3 py-2 transition ${
                   isActive
@@ -41,11 +50,16 @@ export default function Header() {
         </nav>
 
         <a
-  href="/#waitlist"
-  className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-bold text-black transition hover:scale-105"
->
-  Join
-</a>
+          href="/#waitlist"
+          onClick={() =>
+            trackEvent('navigation_join_clicked', {
+              location: 'header',
+            })
+          }
+          className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-bold text-black transition hover:scale-105"
+        >
+          Join
+        </a>
       </div>
     </header>
   )

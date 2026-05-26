@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 
 import { navigationItems } from '../config/navigation'
+import { trackEvent } from '../lib/analytics'
 
 export default function MobileNav() {
   return (
@@ -13,6 +14,13 @@ export default function MobileNav() {
             <NavLink
               key={item.to}
               to={item.to}
+              onClick={() =>
+                trackEvent('navigation_clicked', {
+                  location: 'mobile',
+                  route: item.to,
+                  label: item.label,
+                })
+              }
               className={({ isActive }) =>
                 `flex flex-col items-center gap-1 px-2 py-3 text-xs transition ${
                   isActive
