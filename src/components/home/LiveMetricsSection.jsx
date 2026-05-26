@@ -1,6 +1,6 @@
 import { liveMetrics } from '../../data/liveMetrics'
 import { liveMetricsConfig } from '../../data/liveMetricsConfig'
-
+import { useTrackOnce } from '../../hooks/useTrackOnce'
 import HomeSection from './HomeSection'
 import HomeSectionHeader from './HomeSectionHeader'
 import HomeCard from './HomeCard'
@@ -9,6 +9,7 @@ import HomeGrid from './HomeGrid'
 import Badge from '../Badge'
 
 export default function LiveMetricsSection() {
+ useTrackOnce('home_live_metrics_viewed')
   return (
     <HomeSection>
       <HomeSectionHeader
