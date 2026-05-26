@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 
 import { homeSystems } from '../../data/homeSystems'
-
+import { trackEvent } from '../../lib/analytics'
 import HomeSection from './HomeSection'
 import HomeSectionHeader from './HomeSectionHeader'
 import HomeCard from './HomeCard'
@@ -22,7 +22,16 @@ export default function SystemPreviewSection() {
           const Icon = system.icon
 
           return (
-            <Link key={system.to} to={system.to}>
+            <Link
+             key={system.to}
+             to={system.to}
+             onClick={() =>
+               trackEvent('home_system_clicked', {
+                route: system.to,
+                title: system.title,
+              })
+             }
+            >
               <HomeCard className="h-full">
                 <Icon className="mb-5 h-8 w-8 text-cyan-300" />
 
