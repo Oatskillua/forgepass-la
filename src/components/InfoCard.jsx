@@ -9,15 +9,16 @@ export default function InfoCard({
   status,
 }) {
   return (
-    <div
-      onClick={() =>
-        trackEvent('info_card_clicked', {
-          title,
-          status,
-        })
-      }
-      className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-cyan-300/30"
-    >
+    <button
+  type="button"
+  onClick={() =>
+    trackEvent('info_card_clicked', {
+      title,
+      status,
+    })
+  }
+  className="w-full rounded-3xl border border-white/10 bg-white/[0.04] p-6 text-left transition hover:border-cyan-300/30 focus:outline-none focus:ring-2 focus:ring-cyan-300/40"
+>
       <StatusBadge status={status} />
 
       <p className="mb-2 text-sm uppercase tracking-[0.2em] text-white/35">
@@ -31,6 +32,6 @@ export default function InfoCard({
       <p className="mt-4 leading-7 text-white/55">
         {description}
       </p>
-    </div>
+    </button>
   )
 }
