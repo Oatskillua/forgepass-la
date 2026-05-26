@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Trophy } from 'lucide-react'
-
+import { analyticsEvents } from '../config/analyticsEvents'
 import { supabase } from '../lib/supabase'
 import { trackEvent } from '../lib/analytics'
 
@@ -53,7 +53,7 @@ export default function WaitlistForm() {
 
     if (error) {
       if (error.code === '23505') {
-        trackEvent('waitlist_duplicate_email', {
+        trackEvent(analyticsEvents.WAITLIST_DUPLICATE_EMAIL, {
           interest: form.interest,
         })
 
@@ -62,7 +62,7 @@ export default function WaitlistForm() {
         return
       }
 
-      trackEvent('waitlist_submit_failed', {
+      trackEvent(analyticsEvents.WAITLIST_SUBMIT_FAILED, {
         code: error.code,
         message: error.message,
       })
@@ -74,7 +74,7 @@ export default function WaitlistForm() {
 
     setSubmitted(true)
 
-    trackEvent('waitlist_joined', {
+    trackEvent(analyticsEvents.WAITLIST_JOINED, {
       interest: form.interest,
       city: form.city.trim(),
     })

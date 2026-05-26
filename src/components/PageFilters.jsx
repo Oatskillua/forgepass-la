@@ -1,4 +1,5 @@
 import { trackEvent } from '../lib/analytics'
+import { analyticsEvents } from '../config/analyticsEvents'
 
 export default function PageFilters({
   label = 'Filter',
@@ -24,7 +25,7 @@ export default function PageFilters({
               onClick={() => {
                 onChange(option)
 
-                trackEvent('category_filter_clicked', {
+                trackEvent(analyticsEvents.CATEGORY_FILTER_CLICKED, {
                   label,
                   option,
                 })

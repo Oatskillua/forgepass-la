@@ -1,5 +1,5 @@
 import { Search } from 'lucide-react'
-
+import { analyticsEvents } from '../config/analyticsEvents'
 import { trackEvent } from '../lib/analytics'
 
 export default function SearchBox({
@@ -16,7 +16,7 @@ export default function SearchBox({
         onChange={(event) => {
           onChange(event.target.value)
 
-          trackEvent('search_used', {
+          trackEvent(analyticsEvents.SEARCH_USED, {
             placeholder,
             length: event.target.value.length,
           })

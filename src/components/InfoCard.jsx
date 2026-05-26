@@ -1,5 +1,5 @@
 import StatusBadge from './StatusBadge'
-
+import { analyticsEvents } from '../config/analyticsEvents'
 import { trackEvent } from '../lib/analytics'
 
 export default function InfoCard({
@@ -12,14 +12,14 @@ export default function InfoCard({
     <button
       type="button"
       onClick={() =>
-        trackEvent('info_card_clicked', {
+        trackEvent(analyticsEvents.INFO_CARD_CLICKED, {
           title,
           status,
         })
       }
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
-          trackEvent('info_card_keyboard_selected', {
+          trackEvent(analyticsEvents.INFO_CARD_KEYBOARD_SELECTED, {
             title,
             status,
           })
