@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-
+import { analyticsEvents } from '../config/analyticsEvents'
 import { navigationItems } from '../config/navigation'
 import { trackEvent } from '../lib/analytics'
 
@@ -15,7 +15,7 @@ export default function MobileNav() {
               key={item.to}
               to={item.to}
               onClick={() =>
-                trackEvent('navigation_clicked', {
+                trackEvent(analyticsEvents.NAVIGATION_CLICKED, {
                   location: 'mobile',
                   route: item.to,
                   label: item.label,

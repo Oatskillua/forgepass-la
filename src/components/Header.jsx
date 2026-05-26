@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { Compass } from 'lucide-react'
-
+import { analyticsEvents } from '../config/analyticsEvents'
 import { navigationItems } from '../config/navigation'
 import { trackEvent } from '../lib/analytics'
 
@@ -30,7 +30,7 @@ export default function Header() {
               key={item.to}
               to={item.to}
               onClick={() =>
-                trackEvent('navigation_clicked', {
+                trackEvent(analyticsEvents.NAVIGATION_CLICKED, {
                   location: 'header',
                   route: item.to,
                   label: item.label,
@@ -52,7 +52,7 @@ export default function Header() {
         <a
           href="/#waitlist"
           onClick={() =>
-            trackEvent('navigation_join_clicked', {
+            trackEvent(analyticsEvents.NAVIGATION_JOIN_CLICKED, {
               location: 'header',
             })
           }
