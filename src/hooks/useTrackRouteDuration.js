@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { trackEvent } from '../lib/analytics'
+import { analyticsEvents } from '../config/analyticsEvents'
 
 export function useTrackRouteDuration() {
   const location = useLocation()
@@ -10,11 +11,9 @@ export function useTrackRouteDuration() {
     const start = Date.now()
 
     return () => {
-      const duration = Math.round(
-        (Date.now() - start) / 1000
-      )
+      const duration = Math.round((Date.now() - start) / 1000)
 
-      trackEvent('route_duration', {
+      trackEvent(analyticsEvents.ROUTE_DURATION, {
         path: location.pathname,
         seconds: duration,
       })
