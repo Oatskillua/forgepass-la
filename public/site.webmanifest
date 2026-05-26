@@ -1,0 +1,21 @@
+{
+  "name": "ForgePass LA",
+  "short_name": "ForgePass",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070B14",
+  "theme_color": "#00d9ff",
+  "description": "ForgePass LA tourism access platform for discovery, events, rewards, and city intelligence.",
+  "icons": [
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
