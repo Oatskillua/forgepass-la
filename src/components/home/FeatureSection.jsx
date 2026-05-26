@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion'
-
+import { useTrackOnce } from '../../hooks/useTrackOnce'
 import { homeFeatures } from '../../data/homeFeatures'
 import HomeCard from './HomeCard'
 import HomeGrid from './HomeGrid'
 
 export default function FeatureSection() {
+ useTrackOnce('home_features_viewed')
   return (
     <div id="features" className="mb-20 lg:mb-28">
       <HomeGrid columns="three" className="gap-5 sm:gap-6">
