@@ -9,6 +9,8 @@ import Status from './pages/Status'
 import Health from './pages/Health'
 import NotFound from './pages/NotFound'
 import ErrorFallback from './components/ErrorFallback'
+import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
 
 export const router = createBrowserRouter([
   {
@@ -41,9 +43,19 @@ export const router = createBrowserRouter([
     errorElement: <ErrorFallback />,
   },
   {
-  path: '/health',
-  element: <Health />,
-  errorElement: <ErrorFallback />,
+    path: '/health',
+    element: <Health />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: '/privacy',
+    element: <Privacy />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: '/terms',
+    element: <Terms />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: '*',

@@ -24,7 +24,15 @@ export const routeMeta = {
     description: 'ForgePass LA production and roadmap status.',
   },
   '/health': {
-  title: 'Health',
-  description: 'ForgePass LA production health check.',
+    title: 'Health',
+    description: 'ForgePass LA production health check.',
+  },
+  '/privacy': {
+    title: 'Privacy Policy',
+    description: 'ForgePass LA privacy policy.',
+  },
+  '/terms': {
+    title: 'Terms of Service',
+    description: 'ForgePass LA terms of service.',
   },
 }
