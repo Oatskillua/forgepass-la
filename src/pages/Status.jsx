@@ -2,6 +2,7 @@ import PageShell from '../components/PageShell'
 import PageModule from '../components/PageModule'
 import StatusBadge from '../components/StatusBadge'
 import ContentSection from '../components/ContentSection'
+import SecurityStatusSection from '../components/status/SecurityStatusSection'
 import { statusItems } from '../data/statusItems'
 
 export default function Status() {
@@ -36,6 +37,7 @@ export default function Status() {
           </div>
         </PageModule>
       </ContentSection>
+     <SecurityStatusSection />
     </PageShell>
   )
 }
