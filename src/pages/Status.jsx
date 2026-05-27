@@ -4,6 +4,7 @@ import StatusBadge from '../components/StatusBadge'
 import ContentSection from '../components/ContentSection'
 import SecurityStatusSection from '../components/status/SecurityStatusSection'
 import { statusItems } from '../data/statusItems'
+import OperationalStatusSection from '../components/status/OperationalStatusSection'
 
 export default function Status() {
   return (
@@ -38,6 +39,7 @@ export default function Status() {
         </PageModule>
       </ContentSection>
      <SecurityStatusSection />
+    <OperationalStatusSection />
     </PageShell>
   )
 }
