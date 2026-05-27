@@ -35,4 +35,8 @@ export const routeMeta = {
     title: 'Terms of Service',
     description: 'ForgePass LA terms of service.',
   },
+  '/contact': {
+    title: 'Contact',
+    description: 'ForgePass LA contact and support information.',
+  },
 }
