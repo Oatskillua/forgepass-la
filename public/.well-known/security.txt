@@ -1,0 +1,4 @@
+Contact: https://forgepass-la.vercel.app/contact
+Policy: https://forgepass-la.vercel.app/security
+Preferred-Languages: en
+Canonical: https://forgepass-la.vercel.app/.well-known/security.txt
