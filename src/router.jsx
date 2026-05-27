@@ -12,6 +12,7 @@ import ErrorFallback from './components/ErrorFallback'
 import Privacy from './pages/Privacy'
 import Contact from './pages/Contact'
 import Terms from './pages/Terms'
+import Security from './pages/Security'
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,11 @@ export const router = createBrowserRouter([
   {
     path: '/contact',
     element: <Contact />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: '/security',
+    element: <Security />,
     errorElement: <ErrorFallback />,
   },
   {

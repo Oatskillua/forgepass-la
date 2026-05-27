@@ -39,4 +39,8 @@ export const routeMeta = {
     title: 'Contact',
     description: 'ForgePass LA contact and support information.',
   },
+  '/security': {
+    title: 'Security Disclosure',
+    description: 'ForgePass LA security posture and disclosure information.',
+  },
 }

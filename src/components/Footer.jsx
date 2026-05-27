@@ -36,6 +36,13 @@ export default function Footer() {
           >
             Contact
           </Link>
+
+          <Link
+            to="/security"
+            className="transition hover:text-cyan-300"
+          >
+            Security
+          </Link>
         </div>
       </div>
     </footer>
