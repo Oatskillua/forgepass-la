@@ -15,6 +15,7 @@ export const analyticsEvents = {
   HOME_CITY_INTELLIGENCE_VIEWED: 'home_city_intelligence_viewed',
 
   CATEGORY_FILTER_CLICKED: 'category_filter_clicked',
+  FOOTER_LINK_CLICKED: 'footer_link_clicked',
   SEARCH_USED: 'search_used',
   INFO_CARD_CLICKED: 'info_card_clicked',
   INFO_CARD_KEYBOARD_SELECTED: 'info_card_keyboard_selected',

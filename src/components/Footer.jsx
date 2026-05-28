@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { trackEvent } from '../lib/analytics'
+import { analyticsEvents } from '../config/analyticsEvents'
 
 export default function Footer() {
   return (
@@ -11,6 +13,12 @@ export default function Footer() {
         <div className="flex items-center gap-5">
           <Link
             to="/privacy"
+             onClick={() =>
+  	      trackEvent(analyticsEvents.FOOTER_LINK_CLICKED, {
+   	       route: '/privacy',
+  	       label: 'Privacy',
+ 	     })
+	    }
             className="transition hover:text-cyan-300"
           >
             Privacy
@@ -18,6 +26,13 @@ export default function Footer() {
 
           <Link
             to="/terms"
+             onClick={() =>
+  	      trackEvent(analyticsEvents.FOOTER_LINK_CLICKED, {
+   	       route: '/terms',
+  	       label: 'Terms',
+ 	     })
+	    }
+
             className="transition hover:text-cyan-300"
           >
             Terms
@@ -25,13 +40,27 @@ export default function Footer() {
 
           <Link
             to="/status"
+             onClick={() =>
+  	      trackEvent(analyticsEvents.FOOTER_LINK_CLICKED, {
+   	       route: '/status',
+  	       label: 'Status',
+ 	     })
+	    }
+
             className="transition hover:text-cyan-300"
           >
             Status
           </Link>
 
           <Link
-            to="/contact"
+            to="/Contact"
+             onClick={() =>
+  	      trackEvent(analyticsEvents.FOOTER_LINK_CLICKED, {
+   	       route: '/contact',
+  	       label: 'Contact',
+ 	     })
+	    }
+
             className="transition hover:text-cyan-300"
           >
             Contact
@@ -39,6 +68,13 @@ export default function Footer() {
 
           <Link
             to="/security"
+             onClick={() =>
+  	      trackEvent(analyticsEvents.FOOTER_LINK_CLICKED, {
+   	       route: '/security',
+  	       label: 'Security',
+ 	     })
+	    }
+
             className="transition hover:text-cyan-300"
           >
             Security
