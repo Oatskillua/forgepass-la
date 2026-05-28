@@ -5,6 +5,7 @@ import ContentSection from '../components/ContentSection'
 import SecurityStatusSection from '../components/status/SecurityStatusSection'
 import { statusItems } from '../data/statusItems'
 import OperationalStatusSection from '../components/status/OperationalStatusSection'
+import DeploymentStatusSection from '../components/status/DeploymentStatusSection'
 
 export default function Status() {
   return (
@@ -38,8 +39,9 @@ export default function Status() {
           </div>
         </PageModule>
       </ContentSection>
-     <SecurityStatusSection />
-    <OperationalStatusSection />
-    </PageShell>
+       <SecurityStatusSection />
+       <OperationalStatusSection />
+      <DeploymentStatusSection />
+     </PageShell>
   )
 }
