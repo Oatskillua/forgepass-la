@@ -1,5 +1,11 @@
 export const platformStatus = [
   {
+  system: 'Application Version',
+  status: 'MVP Alpha',
+  detail:
+    'ForgePass LA is currently running version 0.1.0 with environment-based build metadata visible in the footer.',
+  },
+  {
     system: 'Frontend Infrastructure',
     status: 'Operational',
     detail:
