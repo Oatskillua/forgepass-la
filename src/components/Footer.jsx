@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { trackEvent } from '../lib/analytics'
 import { analyticsEvents } from '../config/analyticsEvents'
+import { appVersion } from '../config/appVersion'
 
 export default function Footer() {
   return (
@@ -9,6 +10,10 @@ export default function Footer() {
         <p>
           ForgePass LA — Navigate the City. Unlock the Experience.
         </p>
+
+        <div className="mt-6 border-t border-white/10 pt-6 text-center text-xs text-white/25">
+          ForgePass LA v{appVersion.version} · {appVersion.stage} · {appVersion.build}
+        </div>
 
         <div className="flex items-center gap-5">
           <Link
