@@ -14,6 +14,9 @@ export const analyticsEvents = {
   HOME_ROADMAP_VIEWED: 'home_roadmap_viewed',
   HOME_CITY_INTELLIGENCE_VIEWED: 'home_city_intelligence_viewed',
 
+  FEEDBACK_SUBMITTED: 'feedback_submitted',
+  FEEDBACK_SUBMIT_FAILED: 'feedback_submit_failed',
+
   CATEGORY_FILTER_CLICKED: 'category_filter_clicked',
   FOOTER_LINK_CLICKED: 'footer_link_clicked',
   SEARCH_USED: 'search_used',
