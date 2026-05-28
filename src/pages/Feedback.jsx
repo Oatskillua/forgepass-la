@@ -1,6 +1,7 @@
 import PageShell from '../components/PageShell'
 import PageModule from '../components/PageModule'
 import Badge from '../components/Badge'
+import FeedbackForm from '../components/FeedbackForm'
 
 export default function Feedback() {
   return (
@@ -72,6 +73,10 @@ export default function Feedback() {
           </section>
         </div>
       </PageModule>
+
+      <div className="mt-14">
+        <FeedbackForm />
+      </div>
     </PageShell>
   )
 }
