@@ -6,6 +6,7 @@ import SecurityStatusSection from '../components/status/SecurityStatusSection'
 import { statusItems } from '../data/statusItems'
 import OperationalStatusSection from '../components/status/OperationalStatusSection'
 import DeploymentStatusSection from '../components/status/DeploymentStatusSection'
+import ReleaseChecklistSection from '../components/status/ReleaseChecklistSection'
 
 export default function Status() {
   return (
@@ -42,6 +43,7 @@ export default function Status() {
        <SecurityStatusSection />
        <OperationalStatusSection />
       <DeploymentStatusSection />
+     <ReleaseChecklistSection />
      </PageShell>
   )
 }
