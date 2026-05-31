@@ -14,6 +14,7 @@ import Contact from './pages/Contact'
 import Terms from './pages/Terms'
 import Security from './pages/Security'
 import Feedback from './pages/Feedback'
+import AlphaGuide from './pages/AlphaGuide'
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,11 @@ export const router = createBrowserRouter([
     path: '/feedback',
     element: <Feedback />,
     errorElement: <ErrorFallback />,
+  },
+  {
+  path: '/alpha-guide',
+  element: <AlphaGuide />,
+  errorElement: <ErrorFallback />,
   },
   {
     path: '*',

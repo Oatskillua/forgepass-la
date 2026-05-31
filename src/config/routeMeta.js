@@ -43,4 +43,8 @@ export const routeMeta = {
     title: 'Security Disclosure',
     description: 'ForgePass LA security posture and disclosure information.',
   },
+  '/alpha-guide': {
+  title: 'Alpha Tester Guide',
+  description: 'ForgePass LA alpha testing guidance and expectations.',
+  },
 }
