@@ -8,6 +8,7 @@ import OperationalStatusSection from '../components/status/OperationalStatusSect
 import DeploymentStatusSection from '../components/status/DeploymentStatusSection'
 import ReleaseChecklistSection from '../components/status/ReleaseChecklistSection'
 import KnownLimitationsSection from '../components/status/KnownLimitationsSection'
+import AlphaOperationsSection from '../components/status/AlphaOperationsSection'
 
 export default function Status() {
   return (
@@ -46,6 +47,7 @@ export default function Status() {
       <DeploymentStatusSection />
      <ReleaseChecklistSection />
     <KnownLimitationsSection />
+   <AlphaOperationsSection />
      </PageShell>
   )
 }
