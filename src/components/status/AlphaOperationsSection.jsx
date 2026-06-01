@@ -2,6 +2,7 @@ import HomeSectionHeader from '../home/HomeSectionHeader'
 import HomeGrid from '../home/HomeGrid'
 import HomeCard from '../home/HomeCard'
 import Badge from '../Badge'
+import { Link } from 'react-router-dom'
 
 import { alphaOperations } from '../../data/alphaOperations'
 
@@ -39,6 +40,16 @@ export default function AlphaOperationsSection() {
           </HomeCard>
         ))}
       </HomeGrid>
+
+      <div className="mt-10">
+      <Link
+        to="/alpha-guide"
+        className="inline-flex rounded-2xl bg-cyan-300 px-6 py-4 font-bold text-black transition hover:scale-105"
+  >
+    View Alpha Tester Guide
+  </Link>
+</div>
+
     </section>
   )
 }
