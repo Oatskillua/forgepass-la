@@ -1,7 +1,7 @@
 import HomeSectionHeader from '../home/HomeSectionHeader'
 import HomeGrid from '../home/HomeGrid'
 import HomeCard from '../home/HomeCard'
-
+import { Link } from 'react-router-dom'
 import { alphaWorkflow } from '../../data/alphaWorkflow'
 
 export default function AlphaWorkflowSection() {
@@ -31,6 +31,22 @@ export default function AlphaWorkflowSection() {
           </HomeCard>
         ))}
       </HomeGrid>
+
+     <div className="mt-10 flex flex-wrap gap-4">
+  <Link
+    to="/feedback"
+    className="inline-flex rounded-2xl bg-cyan-300 px-6 py-4 font-bold text-black transition hover:scale-105"
+  >
+    Submit Alpha Feedback
+  </Link>
+
+  <Link
+    to="/alpha-guide"
+    className="inline-flex rounded-2xl border border-white/10 bg-white/5 px-6 py-4 font-bold text-white transition hover:border-cyan-300/30 hover:text-cyan-300"
+  >
+    View Tester Guide
+  </Link>
+</div>
     </section>
   )
 }
