@@ -67,4 +67,17 @@
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
+
+  <url>
+    <loc>https://forgepass-la.vercel.app/alpha-guide</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://forgepass-la.vercel.app/feedback</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
 </urlset>
