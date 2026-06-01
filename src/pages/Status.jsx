@@ -11,6 +11,7 @@ import KnownLimitationsSection from '../components/status/KnownLimitationsSectio
 import AlphaOperationsSection from '../components/status/AlphaOperationsSection'
 import AlphaWorkflowSection from '../components/status/AlphaWorkflowSection'
 import AlphaReadinessSummarySection from '../components/status/AlphaReadinessSummarySection'
+import AlphaInviteChecklistSection from '../components/status/AlphaInviteChecklistSection'
 
 export default function Status() {
   return (
@@ -52,6 +53,7 @@ export default function Status() {
    <AlphaOperationsSection />
   <AlphaWorkflowSection />
  <AlphaReadinessSummarySection />
+<AlphaInviteChecklistSection />
      </PageShell>
   )
 }
