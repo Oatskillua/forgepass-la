@@ -3,6 +3,7 @@ import HomeGrid from '../home/HomeGrid'
 import HomeCard from '../home/HomeCard'
 import Badge from '../Badge'
 
+import { Link } from 'react-router-dom'
 import { alphaInviteChecklist } from '../../data/alphaInviteChecklist'
 
 export default function AlphaInviteChecklistSection() {
@@ -32,6 +33,16 @@ export default function AlphaInviteChecklistSection() {
           </HomeCard>
         ))}
       </HomeGrid>
+
+<div className="mt-10">
+  <Link
+    to="/alpha-launch"
+    className="inline-flex rounded-2xl bg-cyan-300 px-6 py-4 font-bold text-black transition hover:scale-105"
+  >
+    Open Alpha Launch Command
+  </Link>
+</div>
+
     </section>
   )
 }
