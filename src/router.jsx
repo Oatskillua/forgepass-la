@@ -15,6 +15,7 @@ import Terms from './pages/Terms'
 import Security from './pages/Security'
 import Feedback from './pages/Feedback'
 import AlphaGuide from './pages/AlphaGuide'
+import AlphaLaunch from './pages/AlphaLaunch'
 
 export const router = createBrowserRouter([
   {
@@ -79,6 +80,11 @@ export const router = createBrowserRouter([
   {
   path: '/alpha-guide',
   element: <AlphaGuide />,
+  errorElement: <ErrorFallback />,
+  },
+  {
+  path: '/alpha-launch',
+  element: <AlphaLaunch />,
   errorElement: <ErrorFallback />,
   },
   {

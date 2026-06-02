@@ -47,4 +47,8 @@ export const routeMeta = {
   title: 'Alpha Tester Guide',
   description: 'ForgePass LA alpha testing guidance and expectations.',
   },
+  '/alpha-launch': {
+  title: 'Alpha Launch',
+  description: 'ForgePass LA closed alpha launch command page.',
+  },
 }
