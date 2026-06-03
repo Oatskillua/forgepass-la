@@ -1,13 +1,19 @@
 import { useState } from 'react'
 import { Trophy } from 'lucide-react'
+import { Turnstile } from '@marsidev/react-turnstile'
+
 import { analyticsEvents } from '../config/analyticsEvents'
 import { supabase } from '../lib/supabase'
 import { trackEvent } from '../lib/analytics'
+import { getTurnstileSiteKey } from '../lib/turnstile'
 
 export default function WaitlistForm() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState('')
+
+  const siteKey = getTurnstileSiteKey()
 
   const [form, setForm] = useState({
     name: '',
@@ -38,6 +44,11 @@ export default function WaitlistForm() {
       return
     }
 
+    if (siteKey && !turnstileToken) {
+      setErrorMessage('Complete the security check before submitting.')
+      return
+    }
+
     setLoading(true)
 
     const { error } = await supabase.from('waitlist').insert([
@@ -58,7 +69,6 @@ export default function WaitlistForm() {
         })
 
         setErrorMessage('This email is already on the waitlist.')
-
         return
       }
 
@@ -68,7 +78,6 @@ export default function WaitlistForm() {
       })
 
       setErrorMessage(error.message || 'Submission failed. Try again.')
-
       return
     }
 
@@ -85,6 +94,8 @@ export default function WaitlistForm() {
       city: '',
       interest: 'Events',
     })
+
+    setTurnstileToken('')
   }
 
   return (
@@ -134,6 +145,15 @@ export default function WaitlistForm() {
           <option>Transportation</option>
           <option>Rewards</option>
         </select>
+
+        {siteKey && (
+          <Turnstile
+            siteKey={siteKey}
+            onSuccess={setTurnstileToken}
+            onExpire={() => setTurnstileToken('')}
+            onError={() => setTurnstileToken('')}
+          />
+        )}
 
         {errorMessage && (
           <p className="text-sm font-semibold text-red-300">
