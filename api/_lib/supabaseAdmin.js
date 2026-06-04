@@ -8,5 +8,16 @@ export function createSupabaseAdminClient() {
     throw new Error('Missing Supabase server environment variables.')
   }
 
-  return createClient(url, serviceRoleKey)
+  return createClient(url, serviceRoleKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+    global: {
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+      },
+    },
+  })
 }
