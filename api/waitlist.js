@@ -5,6 +5,14 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
+function getServerEnvDebug() {
+  return {
+    hasSupabaseUrl: Boolean(process.env.SUPABASE_URL),
+    hasServiceRoleKey: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+    serviceRolePrefix: process.env.SUPABASE_SERVICE_ROLE_KEY?.slice(0, 14),
+  }
+}
+
 export default async function handler(request, response) {
   if (request.method !== 'POST') {
     return response.status(405).json({
@@ -38,6 +46,11 @@ export default async function handler(request, response) {
     )
 
     if (!turnstileResult.success) {
+      console.error('[api/waitlist] turnstile failed', {
+        turnstileResult,
+        ...getServerEnvDebug(),
+      })
+
       return response.status(403).json({
         error: 'Security check failed.',
       })
@@ -55,6 +68,12 @@ export default async function handler(request, response) {
     ])
 
     if (error) {
+      console.error('[api/waitlist] supabase insert failed', {
+        code: error.code,
+        message: error.message,
+        ...getServerEnvDebug(),
+      })
+
       if (error.code === '23505') {
         return response.status(409).json({
           error: 'This email is already on the waitlist.',
@@ -72,6 +91,11 @@ export default async function handler(request, response) {
       ok: true,
     })
   } catch (error) {
+    console.error('[api/waitlist] unexpected error', {
+      message: error.message,
+      ...getServerEnvDebug(),
+    })
+
     return response.status(500).json({
       error: error.message || 'Unexpected server error.',
     })
