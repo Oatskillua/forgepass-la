@@ -3,7 +3,6 @@ import { Trophy } from 'lucide-react'
 import { Turnstile } from '@marsidev/react-turnstile'
 
 import { analyticsEvents } from '../config/analyticsEvents'
-import { supabase } from '../lib/supabase'
 import { trackEvent } from '../lib/analytics'
 import { getTurnstileSiteKey } from '../lib/turnstile'
 
@@ -51,33 +50,40 @@ export default function WaitlistForm() {
 
     setLoading(true)
 
-    const { error } = await supabase.from('waitlist').insert([
-      {
+    const result = await fetch('/api/waitlist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         name: form.name.trim(),
         email: form.email.trim().toLowerCase(),
         city: form.city.trim(),
         interest: form.interest,
-      },
-    ])
+        turnstileToken,
+      }),
+    })
+
+    const data = await result.json()
 
     setLoading(false)
 
-    if (error) {
-      if (error.code === '23505') {
+    if (!result.ok) {
+      if (result.status === 409) {
         trackEvent(analyticsEvents.WAITLIST_DUPLICATE_EMAIL, {
           interest: form.interest,
         })
 
-        setErrorMessage('This email is already on the waitlist.')
+        setErrorMessage(data.error || 'This email is already on the waitlist.')
         return
       }
 
       trackEvent(analyticsEvents.WAITLIST_SUBMIT_FAILED, {
-        code: error.code,
-        message: error.message,
+        code: data.code || result.status,
+        message: data.error,
       })
 
-      setErrorMessage(error.message || 'Submission failed. Try again.')
+      setErrorMessage(data.error || 'Submission failed. Try again.')
       return
     }
 
