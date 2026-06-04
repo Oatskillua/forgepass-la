@@ -1,14 +1,19 @@
 import { useState } from 'react'
 import { MessageSquareCheck } from 'lucide-react'
+import { Turnstile } from '@marsidev/react-turnstile'
 
+import { analyticsEvents } from '../config/analyticsEvents'
 import { supabase } from '../lib/supabase'
 import { trackEvent } from '../lib/analytics'
-import { analyticsEvents } from '../config/analyticsEvents'
+import { getTurnstileSiteKey } from '../lib/turnstile'
 
 export default function FeedbackForm() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState('')
+
+  const siteKey = getTurnstileSiteKey()
 
   const [form, setForm] = useState({
     name: '',
@@ -49,6 +54,11 @@ export default function FeedbackForm() {
       return
     }
 
+    if (siteKey && !turnstileToken) {
+      setErrorMessage('Complete the security check before submitting.')
+      return
+    }
+
     setLoading(true)
 
     const { error } = await supabase.from('feedback').insert([
@@ -73,6 +83,7 @@ export default function FeedbackForm() {
     }
 
     setSubmitted(true)
+    setTurnstileToken('')
 
     trackEvent(analyticsEvents.FEEDBACK_SUBMITTED, {
       category: form.category,
@@ -136,6 +147,15 @@ export default function FeedbackForm() {
           rows={6}
           className="w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-4 outline-none"
         />
+
+        {siteKey && (
+          <Turnstile
+            siteKey={siteKey}
+            onSuccess={setTurnstileToken}
+            onExpire={() => setTurnstileToken('')}
+            onError={() => setTurnstileToken('')}
+          />
+        )}
 
         {errorMessage && (
           <p className="text-sm font-semibold text-red-300">
