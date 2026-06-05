@@ -1,15 +1,20 @@
 import { verifyTurnstileToken } from './_lib/turnstile.js'
-import { createSupabaseAdminClient } from './_lib/supabaseAdmin.js'
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
-function getServerEnvDebug() {
+function getSupabaseConfig() {
+  const url = process.env.SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !serviceRoleKey) {
+    throw new Error('Missing Supabase server environment variables.')
+  }
+
   return {
-    hasSupabaseUrl: Boolean(process.env.SUPABASE_URL),
-    hasServiceRoleKey: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
-    serviceRolePrefix: process.env.SUPABASE_SERVICE_ROLE_KEY?.slice(0, 14),
+    url,
+    serviceRoleKey,
   }
 }
 
@@ -46,44 +51,52 @@ export default async function handler(request, response) {
     )
 
     if (!turnstileResult.success) {
-      console.error('[api/waitlist] turnstile failed', {
-        turnstileResult,
-        ...getServerEnvDebug(),
-      })
-
       return response.status(403).json({
         error: 'Security check failed.',
       })
     }
 
-    const supabase = createSupabaseAdminClient()
+    const { url, serviceRoleKey } = getSupabaseConfig()
 
-    const { error } = await supabase.from('waitlist').insert([
-      {
+    const supabaseResponse = await fetch(`${url}/rest/v1/waitlist`, {
+      method: 'POST',
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
         name: name.trim(),
         email: normalizedEmail,
         city: city.trim(),
         interest,
-      },
-    ])
+      }),
+    })
 
-    if (error) {
-      console.error('[api/waitlist] supabase insert failed', {
-        code: error.code,
-        message: error.message,
-        ...getServerEnvDebug(),
+    if (!supabaseResponse.ok) {
+      const errorText = await supabaseResponse.text()
+
+      console.error('[api/waitlist] direct supabase insert failed', {
+        status: supabaseResponse.status,
+        errorText,
       })
 
-      if (error.code === '23505') {
+      if (supabaseResponse.status === 409) {
         return response.status(409).json({
           error: 'This email is already on the waitlist.',
-          code: error.code,
+        })
+      }
+
+      if (errorText.includes('duplicate key')) {
+        return response.status(409).json({
+          error: 'This email is already on the waitlist.',
         })
       }
 
       return response.status(500).json({
-        error: error.message || 'Submission failed.',
-        code: error.code,
+        error: 'Submission failed.',
+        detail: errorText,
       })
     }
 
@@ -93,7 +106,6 @@ export default async function handler(request, response) {
   } catch (error) {
     console.error('[api/waitlist] unexpected error', {
       message: error.message,
-      ...getServerEnvDebug(),
     })
 
     return response.status(500).json({
