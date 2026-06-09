@@ -4,15 +4,6 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
-function decodeJwtPayload(token) {
-  try {
-    const payload = token.split('.')[1]
-    return JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'))
-  } catch {
-    return null
-  }
-}
-
 function getSupabaseConfig() {
   const url = process.env.SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -20,13 +11,6 @@ function getSupabaseConfig() {
   if (!url || !serviceRoleKey) {
     throw new Error('Missing Supabase server environment variables.')
   }
-
-  const keyPayload = decodeJwtPayload(serviceRoleKey)
-
-  console.error('[api/waitlist] supabase key payload', {
-    ref: keyPayload?.ref,
-    role: keyPayload?.role,
-  })
 
   return {
     url,
@@ -106,7 +90,6 @@ export default async function handler(request, response) {
 
       return response.status(500).json({
         error: 'Submission failed.',
-        detail: errorText,
       })
     }
 
