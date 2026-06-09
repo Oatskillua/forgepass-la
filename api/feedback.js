@@ -1,9 +1,9 @@
 import { verifyTurnstileToken } from './_lib/turnstile.js'
 import { checkRateLimit, getClientIp } from './_lib/rateLimit.js'
-
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-}
+import {
+  isValidEmail,
+  validateFeedbackPayload,
+} from './_lib/validation.js'
 
 function getSupabaseConfig() {
   const url = process.env.SUPABASE_URL
@@ -42,28 +42,29 @@ export default async function handler(request, response) {
 
   try {
     const {
-      name = '',
-      email = '',
-      category = 'General Feedback',
-      message = '',
       turnstileToken,
     } = request.body || {}
 
-    const normalizedEmail = email.trim().toLowerCase()
+    const {
+      name,
+      email,
+      category,
+      message,
+    } = validateFeedbackPayload(request.body || {})
 
-    if (!name.trim()) {
+    if (!name) {
       return response.status(400).json({
         error: 'Enter your name.',
       })
     }
 
-    if (!isValidEmail(normalizedEmail)) {
+    if (!isValidEmail(email)) {
       return response.status(400).json({
         error: 'Enter a valid email address.',
       })
     }
 
-    if (!message.trim()) {
+    if (!message) {
       return response.status(400).json({
         error: 'Enter feedback before submitting.',
       })
@@ -94,10 +95,10 @@ export default async function handler(request, response) {
         Prefer: 'return=minimal',
       },
       body: JSON.stringify({
-        name: name.trim(),
-        email: normalizedEmail,
+        name,
+        email,
         category,
-        message: message.trim(),
+        message,
       }),
     })
 
