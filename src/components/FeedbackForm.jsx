@@ -3,7 +3,6 @@ import { MessageSquareCheck } from 'lucide-react'
 import { Turnstile } from '@marsidev/react-turnstile'
 
 import { analyticsEvents } from '../config/analyticsEvents'
-import { supabase } from '../lib/supabase'
 import { trackEvent } from '../lib/analytics'
 import { getTurnstileSiteKey } from '../lib/turnstile'
 
@@ -61,24 +60,31 @@ export default function FeedbackForm() {
 
     setLoading(true)
 
-    const { error } = await supabase.from('feedback').insert([
-      {
+    const result = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         name: form.name.trim(),
         email: form.email.trim().toLowerCase(),
         category: form.category,
         message: form.message.trim(),
-      },
-    ])
+        turnstileToken,
+      }),
+    })
+
+    const data = await result.json()
 
     setLoading(false)
 
-    if (error) {
+    if (!result.ok) {
       trackEvent(analyticsEvents.FEEDBACK_SUBMIT_FAILED, {
-        code: error.code,
-        message: error.message,
+        code: data.code || result.status,
+        message: data.error,
       })
 
-      setErrorMessage(error.message || 'Feedback submission failed.')
+      setErrorMessage(data.error || 'Feedback submission failed.')
       return
     }
 

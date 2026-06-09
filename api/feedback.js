@@ -1,3 +1,23 @@
+import { verifyTurnstileToken } from './_lib/turnstile.js'
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+function getSupabaseConfig() {
+  const url = process.env.SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !serviceRoleKey) {
+    throw new Error('Missing Supabase server environment variables.')
+  }
+
+  return {
+    url,
+    serviceRoleKey,
+  }
+}
+
 export default async function handler(request, response) {
   if (request.method !== 'POST') {
     return response.status(405).json({
@@ -5,7 +25,90 @@ export default async function handler(request, response) {
     })
   }
 
-  return response.status(501).json({
-    error: 'Feedback server verification not implemented yet.',
-  })
+  try {
+    const {
+      name = '',
+      email = '',
+      category = 'General Feedback',
+      message = '',
+      turnstileToken,
+    } = request.body || {}
+
+    const normalizedEmail = email.trim().toLowerCase()
+
+    if (!name.trim()) {
+      return response.status(400).json({
+        error: 'Enter your name.',
+      })
+    }
+
+    if (!isValidEmail(normalizedEmail)) {
+      return response.status(400).json({
+        error: 'Enter a valid email address.',
+      })
+    }
+
+    if (!message.trim()) {
+      return response.status(400).json({
+        error: 'Enter feedback before submitting.',
+      })
+    }
+
+    const remoteIp =
+      request.headers['x-forwarded-for']?.split(',')[0]?.trim()
+
+    const turnstileResult = await verifyTurnstileToken(
+      turnstileToken,
+      remoteIp,
+    )
+
+    if (!turnstileResult.success) {
+      return response.status(403).json({
+        error: 'Security check failed.',
+      })
+    }
+
+    const { url, serviceRoleKey } = getSupabaseConfig()
+
+    const supabaseResponse = await fetch(`${url}/rest/v1/feedback`, {
+      method: 'POST',
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
+        name: name.trim(),
+        email: normalizedEmail,
+        category,
+        message: message.trim(),
+      }),
+    })
+
+    if (!supabaseResponse.ok) {
+      const errorText = await supabaseResponse.text()
+
+      console.error('[api/feedback] direct supabase insert failed', {
+        status: supabaseResponse.status,
+        errorText,
+      })
+
+      return response.status(500).json({
+        error: 'Feedback submission failed.',
+      })
+    }
+
+    return response.status(200).json({
+      ok: true,
+    })
+  } catch (error) {
+    console.error('[api/feedback] unexpected error', {
+      message: error.message,
+    })
+
+    return response.status(500).json({
+      error: error.message || 'Unexpected server error.',
+    })
+  }
 }
