@@ -1,5 +1,3 @@
-import { checkRateLimit, getClientIp } from './_lib/rateLimit.js'
-
 const buckets = new Map()
 
 export function checkRateLimit({
