@@ -1,4 +1,5 @@
 import { verifyTurnstileToken } from './_lib/turnstile.js'
+import { checkRateLimit, getClientIp } from './_lib/rateLimit.js'
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -22,6 +23,20 @@ export default async function handler(request, response) {
   if (request.method !== 'POST') {
     return response.status(405).json({
       error: 'Method not allowed',
+    })
+  }
+
+  const clientIp = getClientIp(request)
+
+  const rateLimit = checkRateLimit({
+    key: `feedback:${clientIp}`,
+    limit: 5,
+    windowMs: 60_000,
+  })
+
+  if (!rateLimit.allowed) {
+    return response.status(429).json({
+      error: 'Too many requests. Please try again shortly.',
     })
   }
 
