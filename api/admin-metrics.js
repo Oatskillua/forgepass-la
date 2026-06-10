@@ -12,37 +12,37 @@ function getSupabaseConfig() {
   }
 }
 
-async function getCount(url, serviceRoleKey, table) {
+async function getRows(url, serviceRoleKey, table) {
   const response = await fetch(
-    `${url}/rest/v1/${table}?select=*`,
+    `${url}/rest/v1/${table}?select=id`,
     {
-      method: 'HEAD',
       headers: {
         apikey: serviceRoleKey,
         Authorization: `Bearer ${serviceRoleKey}`,
-        Prefer: 'count=exact',
+        'Content-Type': 'application/json',
       },
     },
   )
 
-  const contentRange = response.headers.get('content-range')
-  const count = contentRange?.split('/')[1]
+  if (!response.ok) {
+    throw new Error(`Failed to load ${table}`)
+  }
 
-  return Number(count || 0)
+  return response.json()
 }
 
 export default async function handler(request, response) {
   try {
     const { url, serviceRoleKey } = getSupabaseConfig()
 
-    const [waitlistCount, feedbackCount] = await Promise.all([
-      getCount(url, serviceRoleKey, 'waitlist'),
-      getCount(url, serviceRoleKey, 'feedback'),
+    const [waitlistRows, feedbackRows] = await Promise.all([
+      getRows(url, serviceRoleKey, 'waitlist'),
+      getRows(url, serviceRoleKey, 'feedback'),
     ])
 
     return response.status(200).json({
-      waitlistCount,
-      feedbackCount,
+      waitlistCount: waitlistRows.length,
+      feedbackCount: feedbackRows.length,
       environment: process.env.VERCEL_ENV || 'unknown',
       timestamp: new Date().toISOString(),
     })
