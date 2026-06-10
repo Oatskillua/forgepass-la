@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Badge from '../Badge'
 import { adminMetricLinks } from '../../data/adminMetrics'
+import AdminWaitlistSection from './AdminWaitlistSection'
 
 export default function AdminMetricsSection({ accessCode }) {
   const [metrics, setMetrics] = useState(null)
@@ -124,6 +125,8 @@ export default function AdminMetricsSection({ accessCode }) {
           ))}
         </div>
       </section>
+
+     <AdminWaitlistSection accessCode={accessCode} />
     </div>
   )
 }
