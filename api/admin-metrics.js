@@ -14,8 +14,9 @@ function getSupabaseConfig() {
 
 async function getCount(url, serviceRoleKey, table) {
   const response = await fetch(
-    `${url}/rest/v1/${table}?select=id`,
+    `${url}/rest/v1/${table}?select=*`,
     {
+      method: 'HEAD',
       headers: {
         apikey: serviceRoleKey,
         Authorization: `Bearer ${serviceRoleKey}`,
@@ -24,7 +25,10 @@ async function getCount(url, serviceRoleKey, table) {
     },
   )
 
-  return Number(response.headers.get('content-range')?.split('/')[1] || 0)
+  const contentRange = response.headers.get('content-range')
+  const count = contentRange?.split('/')[1]
+
+  return Number(count || 0)
 }
 
 export default async function handler(request, response) {
