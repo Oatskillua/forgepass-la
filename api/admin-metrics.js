@@ -14,7 +14,7 @@ function getSupabaseConfig() {
 
 async function getRows(url, serviceRoleKey, table) {
   const response = await fetch(
-    `${url}/rest/v1/${table}?select=id`,
+    `${url}/rest/v1/${table}?select=*`,
     {
       headers: {
         apikey: serviceRoleKey,
