@@ -1,3 +1,5 @@
+import { validateAdminAccess } from './_lib/adminAuth.js'
+
 function getSupabaseConfig() {
   const url = process.env.SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -32,6 +34,12 @@ async function getRows(url, serviceRoleKey, table) {
 }
 
 export default async function handler(request, response) {
+  if (!validateAdminAccess(request)) {
+    return response.status(401).json({
+      error: 'Unauthorized.',
+    })
+  }
+
   try {
     const { url, serviceRoleKey } = getSupabaseConfig()
 

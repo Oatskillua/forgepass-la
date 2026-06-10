@@ -72,7 +72,7 @@ export default function Admin() {
             </button>
           </form>
         ) : (
-          <AdminMetricsSection />
+          <AdminMetricsSection accessCode={expectedCode} />
         )}
       </PageModule>
     </PageShell>

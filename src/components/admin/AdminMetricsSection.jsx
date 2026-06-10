@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Badge from '../Badge'
 import { adminMetricLinks } from '../../data/adminMetrics'
 
-export default function AdminMetricsSection() {
+export default function AdminMetricsSection({ accessCode }) {
   const [metrics, setMetrics] = useState(null)
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -11,7 +11,12 @@ export default function AdminMetricsSection() {
 
     async function loadMetrics() {
       try {
-        const response = await fetch('/api/admin-metrics')
+        const response = await fetch('/api/admin-metrics', {
+          headers: {
+            'x-admin-access-code': accessCode,
+          },
+        })
+
         const data = await response.json()
 
         if (!active) {
@@ -36,7 +41,7 @@ export default function AdminMetricsSection() {
     return () => {
       active = false
     }
-  }, [])
+  }, [accessCode])
 
   const cards = [
     {
