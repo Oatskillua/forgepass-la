@@ -1,9 +1,18 @@
 import { useEffect, useState } from 'react'
 
+const FEEDBACK_STATUSES = [
+  'new',
+  'reviewed',
+  'planned',
+  'completed',
+  'dismissed',
+]
+
 export default function AdminFeedbackSection({ accessCode }) {
   const [entries, setEntries] = useState([])
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [updatingId, setUpdatingId] = useState('')
 
   useEffect(() => {
     let active = true
@@ -45,6 +54,47 @@ export default function AdminFeedbackSection({ accessCode }) {
       active = false
     }
   }, [accessCode])
+
+  const updateStatus = async (feedbackId, status) => {
+    setUpdatingId(feedbackId)
+    setErrorMessage('')
+
+    try {
+      const response = await fetch('/api/admin-feedback-status', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-access-code': accessCode,
+        },
+        body: JSON.stringify({
+          feedbackId,
+          status,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setErrorMessage(data.error || 'Unable to update feedback status.')
+        return
+      }
+
+      setEntries((currentEntries) =>
+        currentEntries.map((entry) =>
+          entry.id === feedbackId
+            ? {
+                ...entry,
+                status,
+              }
+            : entry,
+        ),
+      )
+    } catch (error) {
+      setErrorMessage(error.message || 'Unable to update feedback status.')
+    } finally {
+      setUpdatingId('')
+    }
+  }
 
   return (
     <section className="rounded-3xl border border-white/10 bg-white/5 p-8">
@@ -92,9 +142,18 @@ export default function AdminFeedbackSection({ accessCode }) {
                   </p>
                 </div>
 
-                <span className="rounded-full border border-white/10 px-3 py-1 text-xs font-bold text-white/50">
-                  {entry.status || 'new'}
-                </span>
+                <select
+                  value={entry.status || 'new'}
+                  disabled={updatingId === entry.id}
+                  onChange={(event) => updateStatus(entry.id, event.target.value)}
+                  className="rounded-full border border-white/10 bg-black/40 px-3 py-2 text-xs font-bold text-white/70 outline-none disabled:opacity-50"
+                >
+                  {FEEDBACK_STATUSES.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <p className="mt-4 leading-7 text-white/70">
