@@ -45,6 +45,37 @@ export default function AdminMetricsSection({ accessCode }) {
     }
   }, [accessCode])
 
+  const downloadExport = async (endpoint, filename) => {
+    const response = await fetch(endpoint, {
+      headers: {
+        'x-admin-access-code': accessCode,
+      },
+    })
+
+    if (!response.ok) {
+      setErrorMessage('Export failed.')
+      return
+    }
+
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+
+    link.href = url
+    link.download = filename
+    link.click()
+
+    window.URL.revokeObjectURL(url)
+  }
+
+  const exportWaitlist = () => {
+    downloadExport('/api/admin-export-waitlist', 'forgepass-waitlist.csv')
+  }
+
+  const exportFeedback = () => {
+    downloadExport('/api/admin-export-feedback', 'forgepass-feedback.csv')
+  }
+
   const cards = [
     {
       title: 'Waitlist',
@@ -125,10 +156,28 @@ export default function AdminMetricsSection({ accessCode }) {
             </a>
           ))}
         </div>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={exportWaitlist}
+            className="rounded-2xl bg-cyan-300 px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
+          >
+            Export Waitlist CSV
+          </button>
+
+          <button
+            type="button"
+            onClick={exportFeedback}
+            className="rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
+          >
+            Export Feedback CSV
+          </button>
+        </div>
       </section>
 
-     <AdminWaitlistSection accessCode={accessCode} />
-     <AdminFeedbackSection accessCode={accessCode} />
+      <AdminWaitlistSection accessCode={accessCode} />
+      <AdminFeedbackSection accessCode={accessCode} />
     </div>
   )
 }
