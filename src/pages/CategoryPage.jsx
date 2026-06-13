@@ -10,7 +10,7 @@ import RoadmapModule from '../components/RoadmapModule'
 
 import { useFilteredItems } from '../hooks/useFilteredItems'
 
-export default function CategoryPage({ config }) {
+export default function CategoryPage({ config, children }) {
   const {
     activeFilter,
     setActiveFilter,
@@ -62,6 +62,8 @@ export default function CategoryPage({ config }) {
           <RoadmapModule items={config.roadmap} />
         </PageModule>
       </ContentSection>
+
+      {children}
 
       <PageCTA />
     </PageShell>

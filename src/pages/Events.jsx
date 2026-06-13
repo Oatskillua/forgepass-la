@@ -4,9 +4,8 @@ import LiveEventsSection from '../components/events/LiveEventsSection'
 
 export default function Events() {
   return (
-    <>
-      <CategoryPage config={pageConfigs.events} />
+    <CategoryPage config={pageConfigs.events}>
       <LiveEventsSection />
-    </>
+    </CategoryPage>
   )
 }
