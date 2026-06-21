@@ -12,6 +12,7 @@ export default async function handler(request, response) {
     }
 
     const city = request.query.city || DEFAULT_CITY
+    const keyword = request.query.keyword || ''
     const size = request.query.size || DEFAULT_SIZE
 
     const url = new URL('https://app.ticketmaster.com/discovery/v2/events.json')
@@ -20,6 +21,10 @@ export default async function handler(request, response) {
     url.searchParams.set('city', city)
     url.searchParams.set('size', size)
     url.searchParams.set('sort', 'date,asc')
+
+    if (keyword) {
+      url.searchParams.set('keyword', keyword)
+    }
 
     const ticketmasterResponse = await fetch(url)
 

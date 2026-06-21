@@ -4,13 +4,26 @@ export default function LiveEventsSection() {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     let active = true
 
     async function loadEvents() {
+      setLoading(true)
+      setErrorMessage('')
+
       try {
-        const response = await fetch('/api/events')
+        const params = new URLSearchParams({
+          city: 'Los Angeles',
+          size: '12',
+        })
+
+        if (searchQuery.trim()) {
+          params.set('keyword', searchQuery.trim())
+        }
+
+        const response = await fetch(`/api/events?${params.toString()}`)
         const data = await response.json()
 
         if (!active) return
@@ -32,12 +45,13 @@ export default function LiveEventsSection() {
       }
     }
 
-    loadEvents()
+    const timeout = setTimeout(loadEvents, 400)
 
     return () => {
       active = false
+      clearTimeout(timeout)
     }
-  }, [])
+  }, [searchQuery])
 
   return (
     <section className="mt-16 rounded-3xl border border-white/10 bg-white/5 p-8">
@@ -48,6 +62,14 @@ export default function LiveEventsSection() {
       <p className="mt-4 leading-7 text-white/60">
         Real event listings powered by Ticketmaster Discovery.
       </p>
+
+      <input
+        type="search"
+        value={searchQuery}
+        onChange={(event) => setSearchQuery(event.target.value)}
+        placeholder="Search events, artists, teams, or venues"
+        className="mt-6 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-4 text-white outline-none placeholder:text-white/35"
+      />
 
       {loading && (
         <p className="mt-6 text-white/50">
