@@ -49,8 +49,8 @@ export default function Header() {
           ))}
         </nav>
 
-        <a
-          href="/#waitlist"
+        <NavLink
+          to="/auth"
           onClick={() =>
             trackEvent(analyticsEvents.NAVIGATION_JOIN_CLICKED, {
               location: 'header',
@@ -58,8 +58,8 @@ export default function Header() {
           }
           className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-bold text-black transition hover:scale-105"
         >
-          Join
-        </a>
+          Open app
+        </NavLink>
       </div>
     </header>
   )

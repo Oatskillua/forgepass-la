@@ -1,5 +1,6 @@
 import PageShell from '../components/PageShell'
 import InfoCard from '../components/InfoCard'
+import SavePlaceCard from '../components/SavePlaceCard'
 import CardGrid from '../components/CardGrid'
 import PageCTA from '../components/PageCTA'
 import PageHero from '../components/PageHero'
@@ -9,8 +10,10 @@ import PageModule from '../components/PageModule'
 import RoadmapModule from '../components/RoadmapModule'
 
 import { useFilteredItems } from '../hooks/useFilteredItems'
+import { useAuth } from '../auth/AuthContext'
 
 export default function CategoryPage({ config, children }) {
+  const { user } = useAuth()
   const {
     activeFilter,
     setActiveFilter,
@@ -44,9 +47,9 @@ export default function CategoryPage({ config, children }) {
         <PageModule>
           {filteredItems.length > 0 ? (
             <CardGrid>
-              {filteredItems.map((item) => (
-                <InfoCard key={item.title} {...item} />
-              ))}
+              {filteredItems.map((item) => config.allowPlaceSaving
+                ? <SavePlaceCard key={item.id || item.title} item={item} userId={user?.id} />
+                : <InfoCard key={item.id || item.title} {...item} />)}
             </CardGrid>
           ) : (
             <EmptyState />

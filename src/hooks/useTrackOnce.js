@@ -4,11 +4,12 @@ import { trackEvent } from '../lib/analytics'
 
 export function useTrackOnce(event, metadata = {}) {
   const tracked = useRef(false)
+  const metadataRef = useRef(metadata)
 
   useEffect(() => {
     if (tracked.current) return
 
     tracked.current = true
-    trackEvent(event, metadata)
+    trackEvent(event, metadataRef.current)
   }, [event])
 }

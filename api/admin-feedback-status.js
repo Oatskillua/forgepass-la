@@ -19,8 +19,12 @@ const ALLOWED_STATUSES = [
   'dismissed',
 ]
 
+import { handleCors } from './_lib/cors.js'
+
 export default async function handler(request, response) {
-  if (!validateAdminAccess(request)) {
+  if (handleCors(request, response, 'PATCH')) return
+  response.setHeader('Cache-Control', 'no-store')
+  if (!await validateAdminAccess(request)) {
     return response.status(401).json({
       error: 'Unauthorized.',
     })
@@ -36,11 +40,12 @@ export default async function handler(request, response) {
     const {
       feedbackId,
       status,
+      expectedStatus,
     } = request.body || {}
 
-    if (!feedbackId) {
+    if (typeof feedbackId !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(feedbackId)) {
       return response.status(400).json({
-        error: 'Missing feedback id.',
+        error: 'Invalid feedback id.',
       })
     }
 
@@ -49,18 +54,23 @@ export default async function handler(request, response) {
         error: 'Invalid status.',
       })
     }
+    if (expectedStatus !== null && !ALLOWED_STATUSES.includes(expectedStatus)) {
+      return response.status(400).json({ error: 'The original feedback status is required.' })
+    }
 
     const { url, serviceRoleKey } = getSupabaseConfig()
 
+    const query = new URLSearchParams({ id: `eq.${feedbackId}`, select: 'id,status' })
+    query.set('status', expectedStatus === null ? 'is.null' : `eq.${expectedStatus}`)
     const updateResponse = await fetch(
-      `${url}/rest/v1/feedback?id=eq.${feedbackId}`,
+      `${url}/rest/v1/feedback?${query}`,
       {
         method: 'PATCH',
         headers: {
           apikey: serviceRoleKey,
           Authorization: `Bearer ${serviceRoleKey}`,
           'Content-Type': 'application/json',
-          Prefer: 'return=minimal',
+          Prefer: 'return=representation',
         },
         body: JSON.stringify({
           status,
@@ -74,6 +84,13 @@ export default async function handler(request, response) {
       })
     }
 
+    const updated = await updateResponse.json()
+    if (Array.isArray(updated) && updated.length === 0) {
+      return response.status(409).json({ error: 'Feedback changed or is no longer available. Refresh before updating again.' })
+    }
+    if (!Array.isArray(updated) || updated.length !== 1 || String(updated[0].id) !== feedbackId || updated[0].status !== status) {
+      return response.status(502).json({ error: 'Feedback update could not be confirmed. Refresh to check its status.' })
+    }
     return response.status(200).json({
       ok: true,
     })

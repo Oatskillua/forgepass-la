@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/react'
+import { sanitizeBreadcrumb, sanitizeErrorUrls } from './telemetryUrls'
 
 export function initSentry() {
   const dsn = import.meta.env.VITE_SENTRY_DSN
@@ -14,5 +15,7 @@ export function initSentry() {
     tracesSampleRate: 0,
     replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 0,
+    beforeBreadcrumb: sanitizeBreadcrumb,
+    beforeSend: sanitizeErrorUrls,
   })
 }

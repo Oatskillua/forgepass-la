@@ -1,9 +1,20 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'https://yktoolgovvenvivbxavr.supabase.co'
-const supabaseAnonKey = 'sb_publishable_0lBy0tcemZkOcCNTlm8M1Q_4g_ZhB2U'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim()
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim()
+let client = null
+let configurationError = ''
 
-export const supabase = createClient(
-  supabaseUrl,
-  supabaseAnonKey
-)
+try {
+  if (!supabaseUrl || !supabaseAnonKey) throw new Error('Missing configuration')
+  const url = new URL(supabaseUrl)
+  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash) {
+    throw new Error('Invalid project URL')
+  }
+  client = createClient(supabaseUrl, supabaseAnonKey)
+} catch {
+  configurationError = 'Configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY with the intended project settings, then rebuild the app.'
+}
+
+export const supabase = client
+export const supabaseConfigurationError = configurationError

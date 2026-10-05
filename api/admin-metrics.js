@@ -1,3 +1,4 @@
+import { intakeCount } from './_lib/intakeExport.js'
 import { validateAdminAccess } from './_lib/adminAuth.js'
 
 function getSupabaseConfig() {
@@ -14,27 +15,12 @@ function getSupabaseConfig() {
   }
 }
 
-async function getRows(url, serviceRoleKey, table) {
-  const response = await fetch(
-    `${url}/rest/v1/${table}?select=*`,
-    {
-      headers: {
-        apikey: serviceRoleKey,
-        Authorization: `Bearer ${serviceRoleKey}`,
-        'Content-Type': 'application/json',
-      },
-    },
-  )
-
-  if (!response.ok) {
-    throw new Error(`Failed to load ${table}`)
-  }
-
-  return response.json()
-}
+import { handleCors } from './_lib/cors.js'
 
 export default async function handler(request, response) {
-  if (!validateAdminAccess(request)) {
+  if (handleCors(request, response, 'GET')) return
+  response.setHeader('Cache-Control', 'no-store')
+  if (!await validateAdminAccess(request)) {
     return response.status(401).json({
       error: 'Unauthorized.',
     })
@@ -43,14 +29,14 @@ export default async function handler(request, response) {
   try {
     const { url, serviceRoleKey } = getSupabaseConfig()
 
-    const [waitlistRows, feedbackRows] = await Promise.all([
-      getRows(url, serviceRoleKey, 'waitlist'),
-      getRows(url, serviceRoleKey, 'feedback'),
+    const [waitlistCount, feedbackCount] = await Promise.all([
+      intakeCount(url, serviceRoleKey, 'waitlist'),
+      intakeCount(url, serviceRoleKey, 'feedback'),
     ])
 
     return response.status(200).json({
-      waitlistCount: waitlistRows.length,
-      feedbackCount: feedbackRows.length,
+      waitlistCount,
+      feedbackCount,
       environment: process.env.VERCEL_ENV || 'unknown',
       timestamp: new Date().toISOString(),
     })

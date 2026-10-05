@@ -14,8 +14,12 @@ function getSupabaseConfig() {
   }
 }
 
+import { handleCors } from './_lib/cors.js'
+
 export default async function handler(request, response) {
-  if (!validateAdminAccess(request)) {
+  if (handleCors(request, response, 'GET')) return
+  response.setHeader('Cache-Control', 'no-store')
+  if (!await validateAdminAccess(request)) {
     return response.status(401).json({
       error: 'Unauthorized.',
     })

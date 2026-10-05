@@ -1,0 +1,8 @@
+{
+  "appId": "com.starforgesecurity.forgepassla",
+  "appName": "ForgePass LA",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

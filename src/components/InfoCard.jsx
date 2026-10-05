@@ -5,27 +5,16 @@ import { trackEvent } from '../lib/analytics'
 export default function InfoCard({
   title,
   category,
- description,
+  description,
   status,
+  actionLabel,
+  onAction,
+  actionDisabled = false,
+  children,
 }) {
   return (
-    <button
-      type="button"
-      onClick={() =>
-        trackEvent(analyticsEvents.INFO_CARD_CLICKED, {
-          title,
-          status,
-        })
-      }
-      onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          trackEvent(analyticsEvents.INFO_CARD_KEYBOARD_SELECTED, {
-            title,
-            status,
-          })
-        }
-      }}
-      className="w-full rounded-3xl border border-white/10 bg-white/[0.04] p-6 text-left transition hover:border-cyan-300/30 focus:outline-none focus:ring-2 focus:ring-cyan-300/40"
+    <article
+      className="w-full rounded-3xl border border-white/10 bg-white/[0.04] p-6 text-left transition hover:border-cyan-300/30"
     >
       <StatusBadge status={status} />
 
@@ -40,6 +29,21 @@ export default function InfoCard({
       <p className="mt-4 leading-7 text-white/55">
         {description}
       </p>
-    </button>
+
+      {onAction && (
+        <button
+          type="button"
+          disabled={actionDisabled}
+          onClick={() => {
+            trackEvent(analyticsEvents.INFO_CARD_CLICKED, { title, status })
+            onAction()
+          }}
+          className="mt-5 rounded-xl border border-cyan-300/30 px-4 py-2 text-sm font-bold text-cyan-200 disabled:opacity-60"
+        >
+          {actionLabel}
+        </button>
+      )}
+      {children}
+    </article>
   )
 }

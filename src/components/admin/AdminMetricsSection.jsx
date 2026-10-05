@@ -1,21 +1,30 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { apiFetch } from '../../lib/apiFetch'
 import Badge from '../Badge'
 import { adminMetricLinks } from '../../data/adminMetrics'
 import AdminWaitlistSection from './AdminWaitlistSection'
 import AdminFeedbackSection from './AdminFeedbackSection'
 
-export default function AdminMetricsSection({ accessCode }) {
+export default function AdminMetricsSection({ accessToken }) {
   const [metrics, setMetrics] = useState(null)
   const [errorMessage, setErrorMessage] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [attempt, setAttempt] = useState(0)
+  const [exporting, setExporting] = useState(false)
+  const [exportError, setExportError] = useState('')
+  const exportRequest = useRef(null)
 
   useEffect(() => {
     let active = true
+    const controller = new AbortController()
 
     async function loadMetrics() {
       try {
-        const response = await fetch('/api/admin-metrics', {
+        const response = await apiFetch('/api/admin-metrics', {
+          signal: controller.signal,
+          cache: 'no-store',
           headers: {
-            'x-admin-access-code': accessCode,
+            Authorization: `Bearer ${accessToken}`,
           },
         })
 
@@ -30,42 +39,59 @@ export default function AdminMetricsSection({ accessCode }) {
           return
         }
 
+        if (![data.waitlistCount, data.feedbackCount].every((count) => Number.isInteger(count) && count >= 0)) {
+          throw new Error('Unable to confirm admin counts. Please refresh.')
+        }
         setMetrics(data)
       } catch (error) {
         if (active) {
           setErrorMessage(error.message || 'Unable to load admin metrics.')
         }
-      }
+      } finally { if (active) setLoading(false) }
     }
 
     loadMetrics()
 
     return () => {
       active = false
+      controller.abort()
+      exportRequest.current?.abort()
     }
-  }, [accessCode])
+  }, [accessToken, attempt])
 
   const downloadExport = async (endpoint, filename) => {
-    const response = await fetch(endpoint, {
+    if (exportRequest.current) return
+    const controller = new AbortController()
+    exportRequest.current = controller
+    setExporting(true); setExportError('')
+    let url
+    try {
+    const response = await apiFetch(endpoint, {
+      signal: controller.signal,
+      cache: 'no-store',
       headers: {
-        'x-admin-access-code': accessCode,
+        Authorization: `Bearer ${accessToken}`,
       },
     })
 
-    if (!response.ok) {
-      setErrorMessage('Export failed.')
-      return
-    }
+    if (!response.ok || !response.headers.get('content-type')?.toLowerCase().startsWith('text/csv')) throw new Error('Export failed')
 
     const blob = await response.blob()
-    const url = window.URL.createObjectURL(blob)
+    if (controller.signal.aborted) return
+    url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
 
     link.href = url
     link.download = filename
     link.click()
 
-    window.URL.revokeObjectURL(url)
+    } catch {
+      if (!controller.signal.aborted) setExportError('The CSV export could not be downloaded. Please retry.')
+    } finally {
+      if (url) window.URL.revokeObjectURL(url)
+      exportRequest.current = null
+      if (!controller.signal.aborted) setExporting(false)
+    }
   }
 
   const exportWaitlist = () => {
@@ -113,10 +139,14 @@ export default function AdminMetricsSection({ accessCode }) {
         </p>
 
         {errorMessage && (
-          <p className="mt-5 rounded-2xl border border-red-300/20 bg-red-300/10 p-4 text-sm font-semibold text-red-200">
+          <p role="alert" className="mt-5 rounded-2xl border border-red-300/20 bg-red-300/10 p-4 text-sm font-semibold text-red-200">
             {errorMessage}
           </p>
         )}
+        {loading && <p role="status" className="mt-4">Loading admin metrics…</p>}
+        <button disabled={loading || exporting} onClick={() => {
+          setLoading(true); setMetrics(null); setErrorMessage(''); setAttempt((value) => value + 1)
+        }} className="mt-4 rounded-xl border border-white/15 px-4 py-2 disabled:opacity-40">Refresh metrics</button>
       </section>
 
       <section className="grid gap-6 md:grid-cols-3">
@@ -161,6 +191,7 @@ export default function AdminMetricsSection({ accessCode }) {
           <button
             type="button"
             onClick={exportWaitlist}
+            disabled={exporting}
             className="rounded-2xl bg-cyan-300 px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
           >
             Export Waitlist CSV
@@ -169,15 +200,18 @@ export default function AdminMetricsSection({ accessCode }) {
           <button
             type="button"
             onClick={exportFeedback}
+            disabled={exporting}
             className="rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black transition hover:scale-[1.02]"
           >
             Export Feedback CSV
           </button>
         </div>
+        {exporting && <p role="status" className="mt-4">Preparing CSV download…</p>}
+        {exportError && <p role="alert" className="mt-4 text-red-300">{exportError}</p>}
       </section>
 
-      <AdminWaitlistSection accessCode={accessCode} />
-      <AdminFeedbackSection accessCode={accessCode} />
+      <AdminWaitlistSection accessToken={accessToken} />
+      <AdminFeedbackSection accessToken={accessToken} />
     </div>
   )
 }

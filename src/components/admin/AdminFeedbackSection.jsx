@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { apiFetch } from '../../lib/apiFetch'
 
 const FEEDBACK_STATUSES = [
   'new',
@@ -8,20 +9,23 @@ const FEEDBACK_STATUSES = [
   'dismissed',
 ]
 
-export default function AdminFeedbackSection({ accessCode }) {
+export default function AdminFeedbackSection({ accessToken }) {
   const [entries, setEntries] = useState([])
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const [updatingId, setUpdatingId] = useState('')
+  const [statusError, setStatusError] = useState('')
+  const [attempt, setAttempt] = useState(0)
+  const lock = useRef(false)
 
   useEffect(() => {
     let active = true
 
     async function loadFeedback() {
       try {
-        const response = await fetch('/api/admin-feedback', {
+        const response = await apiFetch('/api/admin-feedback', {
           headers: {
-            'x-admin-access-code': accessCode,
+            Authorization: `Bearer ${accessToken}`,
           },
         })
 
@@ -36,7 +40,8 @@ export default function AdminFeedbackSection({ accessCode }) {
           return
         }
 
-        setEntries(data.entries || [])
+        if (!Array.isArray(data.entries)) throw new Error('Unable to confirm feedback entries. Please retry.')
+        setEntries(data.entries)
       } catch (error) {
         if (active) {
           setErrorMessage(error.message || 'Unable to load feedback entries.')
@@ -53,31 +58,37 @@ export default function AdminFeedbackSection({ accessCode }) {
     return () => {
       active = false
     }
-  }, [accessCode])
+  }, [accessToken, attempt])
 
-  const updateStatus = async (feedbackId, status) => {
+  const updateStatus = async (feedbackId, status, expectedStatus) => {
+    if (lock.current || loading) return
+    lock.current = true
     setUpdatingId(feedbackId)
-    setErrorMessage('')
+    setStatusError('')
 
     try {
-      const response = await fetch('/api/admin-feedback-status', {
+      const response = await apiFetch('/api/admin-feedback-status', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-access-code': accessCode,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           feedbackId,
           status,
+          expectedStatus,
         }),
       })
 
       const data = await response.json()
 
-      if (!response.ok) {
-        setErrorMessage(data.error || 'Unable to update feedback status.')
+      if (response.status === 401 || response.status === 403) {
+        setEntries([])
+        setErrorMessage('Administrator access could not be verified. Refresh to check access.')
         return
       }
+      if (response.status === 409) throw new Error('Feedback changed or is no longer available. Refresh feedback before updating again.')
+      if (!response.ok || data.ok !== true) throw new Error('Unable to confirm the status update. Refresh feedback to check its status.')
 
       setEntries((currentEntries) =>
         currentEntries.map((entry) =>
@@ -90,8 +101,9 @@ export default function AdminFeedbackSection({ accessCode }) {
         ),
       )
     } catch (error) {
-      setErrorMessage(error.message || 'Unable to update feedback status.')
+      setStatusError(error.message || 'Unable to update feedback status.')
     } finally {
+      lock.current = false
       setUpdatingId('')
     }
   }
@@ -106,14 +118,19 @@ export default function AdminFeedbackSection({ accessCode }) {
         Most recent 25 feedback submissions.
       </p>
 
+      <button disabled={loading || !!updatingId} onClick={() => {
+        setLoading(true); setErrorMessage(''); setStatusError(''); setAttempt((value) => value + 1)
+      }} className="mt-4 rounded-xl border border-white/15 px-4 py-2 text-sm disabled:opacity-40">Refresh feedback</button>
+      {statusError && <p role="alert" className="mt-4 text-red-300">{statusError}</p>}
+
       {loading && (
-        <p className="mt-6 text-sm font-semibold text-white/50">
+        <p role="status" className="mt-6 text-sm font-semibold text-white/50">
           Loading feedback entries...
         </p>
       )}
 
       {errorMessage && (
-        <p className="mt-6 rounded-2xl border border-red-300/20 bg-red-300/10 p-4 text-sm font-semibold text-red-200">
+        <p role="alert" className="mt-6 rounded-2xl border border-red-300/20 bg-red-300/10 p-4 text-sm font-semibold text-red-200">
           {errorMessage}
         </p>
       )}
@@ -144,8 +161,9 @@ export default function AdminFeedbackSection({ accessCode }) {
 
                 <select
                   value={entry.status || 'new'}
-                  disabled={updatingId === entry.id}
-                  onChange={(event) => updateStatus(entry.id, event.target.value)}
+                  aria-label={'Status for feedback ' + entry.id}
+                  disabled={!!updatingId}
+                  onChange={(event) => updateStatus(entry.id, event.target.value, entry.status ?? null)}
                   className="rounded-full border border-white/10 bg-black/40 px-3 py-2 text-xs font-bold text-white/70 outline-none disabled:opacity-50"
                 >
                   {FEEDBACK_STATUSES.map((status) => (

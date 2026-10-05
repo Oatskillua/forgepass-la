@@ -1,3 +1,5 @@
+import { loadIntakeExport, intakeColumns } from './_lib/intakeExport.js'
+import { rowsToCsv } from './_lib/csv.js'
 import { validateAdminAccess } from './_lib/adminAuth.js'
 
 function getSupabaseConfig() {
@@ -11,63 +13,31 @@ function getSupabaseConfig() {
   return { url, serviceRoleKey }
 }
 
-function escapeCsv(value) {
-  const text = String(value ?? '')
-  return `"${text.replaceAll('"', '""')}"`
-}
-
-function rowsToCsv(rows) {
-  const headers = [
-    'id',
-    'name',
-    'email',
-    'category',
-    'message',
-    'status',
-    'created_at',
-  ]
-
-  const lines = [
-    headers.join(','),
-    ...rows.map((row) =>
-      headers.map((header) => escapeCsv(row[header])).join(','),
-    ),
-  ]
-
-  return lines.join('\n')
-}
+import { handleCors } from './_lib/cors.js'
 
 export default async function handler(request, response) {
-  if (!validateAdminAccess(request)) {
+  if (handleCors(request, response, 'GET')) return
+  response.setHeader('Cache-Control', 'no-store')
+  if (!await validateAdminAccess(request)) {
     return response.status(401).json({
       error: 'Unauthorized.',
     })
   }
 
+  if (request.method !== 'GET') {
+    response.setHeader('Allow', 'GET')
+    return response.status(405).json({ error: 'Method not allowed' })
+  }
+
   try {
     const { url, serviceRoleKey } = getSupabaseConfig()
 
-    const supabaseResponse = await fetch(
-      `${url}/rest/v1/feedback?select=id,name,email,category,message,status,created_at&order=created_at.desc`,
-      {
-        headers: {
-          apikey: serviceRoleKey,
-          Authorization: `Bearer ${serviceRoleKey}`,
-          'Content-Type': 'application/json',
-        },
-      },
-    )
-
-    if (!supabaseResponse.ok) {
-      return response.status(500).json({
-        error: 'Failed to export feedback.',
-      })
-    }
-
-    const rows = await supabaseResponse.json()
-    const csv = rowsToCsv(rows)
+    const rows = await loadIntakeExport(url, serviceRoleKey, 'feedback')
+    const csv = rowsToCsv(rows, intakeColumns('feedback'))
+    if (Buffer.byteLength(csv, 'utf8') > 3_500_000) throw new Error('Export is too large for a download.')
 
     response.setHeader('Content-Type', 'text/csv; charset=utf-8')
+    response.setHeader('X-Content-Type-Options', 'nosniff')
     response.setHeader(
       'Content-Disposition',
       'attachment; filename="forgepass-feedback.csv"',

@@ -1,4 +1,4 @@
-export async function verifyTurnstileToken(token, remoteIp) {
+export async function verifyTurnstileToken(token, remoteIp, signal = AbortSignal.timeout(8000)) {
   const secret = process.env.TURNSTILE_SECRET_KEY
 
   if (!secret) {
@@ -8,7 +8,7 @@ export async function verifyTurnstileToken(token, remoteIp) {
     }
   }
 
-  if (!token) {
+  if (typeof token !== 'string' || !token.trim() || token.length > 2048) {
     return {
       success: false,
       error: 'Missing Turnstile token.',
@@ -28,8 +28,13 @@ export async function verifyTurnstileToken(token, remoteIp) {
     {
       method: 'POST',
       body: formData,
+      signal,
+      redirect: 'error',
     },
   )
 
-  return result.json()
+  if (!result.ok) throw new Error('Security verification unavailable.')
+  const data = await result.json()
+  if (typeof data?.success !== 'boolean') throw new Error('Security verification response invalid.')
+  return { success: data.success }
 }

@@ -1,18 +1,27 @@
 import { useEffect, useState } from 'react'
+import { apiFetch } from '../../lib/apiFetch'
 
-export default function AdminWaitlistSection({ accessCode }) {
+export default function AdminWaitlistSection({ accessToken }) {
+  return <WaitlistEntries key={accessToken} accessToken={accessToken} />
+}
+
+function WaitlistEntries({ accessToken }) {
   const [entries, setEntries] = useState([])
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
     let active = true
+    const controller = new AbortController()
 
     async function loadWaitlist() {
       try {
-        const response = await fetch('/api/admin-waitlist', {
+        const response = await apiFetch('/api/admin-waitlist', {
+          signal: controller.signal,
+          cache: 'no-store',
           headers: {
-            'x-admin-access-code': accessCode,
+            Authorization: `Bearer ${accessToken}`,
           },
         })
 
@@ -27,7 +36,8 @@ export default function AdminWaitlistSection({ accessCode }) {
           return
         }
 
-        setEntries(data.entries || [])
+        if (!Array.isArray(data.entries)) throw new Error('Unable to confirm waitlist entries. Please retry.')
+        setEntries(data.entries)
       } catch (error) {
         if (active) {
           setErrorMessage(error.message || 'Unable to load waitlist entries.')
@@ -43,8 +53,9 @@ export default function AdminWaitlistSection({ accessCode }) {
 
     return () => {
       active = false
+      controller.abort()
     }
-  }, [accessCode])
+  }, [accessToken, attempt])
 
   return (
     <section className="rounded-3xl border border-white/10 bg-white/5 p-8">
@@ -56,14 +67,18 @@ export default function AdminWaitlistSection({ accessCode }) {
         Most recent 25 alpha waitlist submissions.
       </p>
 
+      <button disabled={loading} onClick={() => {
+        setLoading(true); setErrorMessage(''); setEntries([]); setAttempt((value) => value + 1)
+      }} className="mt-4 rounded-xl border border-white/15 px-4 py-2 text-sm disabled:opacity-40">Refresh waitlist</button>
+
       {loading && (
-        <p className="mt-6 text-sm font-semibold text-white/50">
+        <p role="status" className="mt-6 text-sm font-semibold text-white/50">
           Loading waitlist entries...
         </p>
       )}
 
       {errorMessage && (
-        <p className="mt-6 rounded-2xl border border-red-300/20 bg-red-300/10 p-4 text-sm font-semibold text-red-200">
+        <p role="alert" className="mt-6 rounded-2xl border border-red-300/20 bg-red-300/10 p-4 text-sm font-semibold text-red-200">
           {errorMessage}
         </p>
       )}

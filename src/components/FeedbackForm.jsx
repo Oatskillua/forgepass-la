@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { MessageSquareCheck } from 'lucide-react'
 import { Turnstile } from '@marsidev/react-turnstile'
 
@@ -6,12 +6,16 @@ import { analyticsEvents } from '../config/analyticsEvents'
 import { trackEvent } from '../lib/analytics'
 import { getTurnstileSiteKey } from '../lib/turnstile'
 
+import { submitIntake } from '../lib/submitIntake'
+
 export default function FeedbackForm() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [turnstileToken, setTurnstileToken] = useState('')
 
+  const lock = useRef(false)
+  const [challengeVersion, setChallengeVersion] = useState(0)
   const siteKey = getTurnstileSiteKey()
 
   const [form, setForm] = useState({
@@ -34,6 +38,7 @@ export default function FeedbackForm() {
 
   const onSubmit = async (event) => {
     event.preventDefault()
+    if (lock.current) return
 
     setErrorMessage('')
     setSubmitted(false)
@@ -43,7 +48,7 @@ export default function FeedbackForm() {
       return
     }
 
-    if (!isValidEmail(form.email)) {
+    if (!isValidEmail(form.email.trim())) {
       setErrorMessage('Enter a valid email address.')
       return
     }
@@ -58,49 +63,22 @@ export default function FeedbackForm() {
       return
     }
 
+    lock.current = true
     setLoading(true)
-
-    const result = await fetch('/api/feedback', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: form.name.trim(),
-        email: form.email.trim().toLowerCase(),
-        category: form.category,
-        message: form.message.trim(),
-        turnstileToken,
-      }),
-    })
-
-    const data = await result.json()
-
-    setLoading(false)
-
-    if (!result.ok) {
-      trackEvent(analyticsEvents.FEEDBACK_SUBMIT_FAILED, {
-        code: data.code || result.status,
-        message: data.error,
-      })
-
-      setErrorMessage(data.error || 'Feedback submission failed.')
-      return
+    try {
+      await submitIntake('/api/feedback', { name: form.name.trim(), email: form.email.trim().toLowerCase(), category: form.category, message: form.message.trim(), turnstileToken })
+      setSubmitted(true)
+      trackEvent(analyticsEvents.FEEDBACK_SUBMITTED, { category: form.category })
+      setForm({ name: '', email: '', category: 'General Feedback', message: '' })
+    } catch (failure) {
+      setErrorMessage(failure.message)
+      trackEvent(analyticsEvents.FEEDBACK_SUBMIT_FAILED, { code: failure.status || 'connection' })
+    } finally {
+      lock.current = false
+      setLoading(false)
+      setTurnstileToken('')
+      setChallengeVersion((version) => version + 1)
     }
-
-    setSubmitted(true)
-    setTurnstileToken('')
-
-    trackEvent(analyticsEvents.FEEDBACK_SUBMITTED, {
-      category: form.category,
-    })
-
-    setForm({
-      name: '',
-      email: '',
-      category: 'General Feedback',
-      message: '',
-    })
   }
 
   return (
@@ -113,6 +91,9 @@ export default function FeedbackForm() {
         <input
           type="text"
           name="name"
+          aria-label="Name"
+          maxLength={100}
+          disabled={loading}
           placeholder="Name"
           required
           value={form.name}
@@ -123,6 +104,9 @@ export default function FeedbackForm() {
         <input
           type="email"
           name="email"
+          aria-label="Email"
+          maxLength={255}
+          disabled={loading}
           placeholder="Email"
           required
           value={form.email}
@@ -132,6 +116,8 @@ export default function FeedbackForm() {
 
         <select
           name="category"
+          aria-label="Feedback category"
+          disabled={loading}
           value={form.category}
           onChange={handleChange}
           className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-4 outline-none"
@@ -146,6 +132,9 @@ export default function FeedbackForm() {
 
         <textarea
           name="message"
+          aria-label="Feedback"
+          maxLength={5000}
+          disabled={loading}
           placeholder="Write your feedback..."
           required
           value={form.message}
@@ -156,6 +145,7 @@ export default function FeedbackForm() {
 
         {siteKey && (
           <Turnstile
+            key={challengeVersion}
             siteKey={siteKey}
             onSuccess={setTurnstileToken}
             onExpire={() => setTurnstileToken('')}
@@ -164,13 +154,13 @@ export default function FeedbackForm() {
         )}
 
         {errorMessage && (
-          <p className="text-sm font-semibold text-red-300">
+          <p role="alert" className="text-sm font-semibold text-red-300">
             {errorMessage}
           </p>
         )}
 
         {submitted && (
-          <div className="py-6 text-center">
+          <div role="status" className="py-6 text-center">
             <MessageSquareCheck className="mx-auto mb-4 h-12 w-12 text-cyan-300" />
 
             <h3 className="mb-2 text-2xl font-bold">

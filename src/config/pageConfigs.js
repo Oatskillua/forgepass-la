@@ -5,6 +5,7 @@ import { safetyItems } from '../data/safetyItems'
 
 export const pageConfigs = {
   discover: {
+    allowPlaceSaving: true,
     eyebrow: 'City Discovery',
     title: 'Discover LA',
     subtitle:

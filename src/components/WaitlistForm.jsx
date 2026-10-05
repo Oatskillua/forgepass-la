@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Trophy } from 'lucide-react'
 import { Turnstile } from '@marsidev/react-turnstile'
 
@@ -6,12 +6,16 @@ import { analyticsEvents } from '../config/analyticsEvents'
 import { trackEvent } from '../lib/analytics'
 import { getTurnstileSiteKey } from '../lib/turnstile'
 
+import { submitIntake } from '../lib/submitIntake'
+
 export default function WaitlistForm() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [turnstileToken, setTurnstileToken] = useState('')
 
+  const lock = useRef(false)
+  const [challengeVersion, setChallengeVersion] = useState(0)
   const siteKey = getTurnstileSiteKey()
 
   const [form, setForm] = useState({
@@ -34,11 +38,12 @@ export default function WaitlistForm() {
 
   const onSubmit = async (e) => {
     e.preventDefault()
+    if (lock.current) return
 
     setErrorMessage('')
     setSubmitted(false)
 
-    if (!isValidEmail(form.email)) {
+    if (!isValidEmail(form.email.trim())) {
       setErrorMessage('Enter a valid email address.')
       return
     }
@@ -48,60 +53,22 @@ export default function WaitlistForm() {
       return
     }
 
+    lock.current = true
     setLoading(true)
-
-    const result = await fetch('/api/waitlist', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: form.name.trim(),
-        email: form.email.trim().toLowerCase(),
-        city: form.city.trim(),
-        interest: form.interest,
-        turnstileToken,
-      }),
-    })
-
-    const data = await result.json()
-
-    setLoading(false)
-
-    if (!result.ok) {
-      if (result.status === 409) {
-        trackEvent(analyticsEvents.WAITLIST_DUPLICATE_EMAIL, {
-          interest: form.interest,
-        })
-
-        setErrorMessage(data.error || 'This email is already on the waitlist.')
-        return
-      }
-
-      trackEvent(analyticsEvents.WAITLIST_SUBMIT_FAILED, {
-        code: data.code || result.status,
-        message: data.error,
-      })
-
-      setErrorMessage(data.error || 'Submission failed. Try again.')
-      return
+    try {
+      await submitIntake('/api/waitlist', { name: form.name.trim(), email: form.email.trim().toLowerCase(), city: form.city.trim(), interest: form.interest, turnstileToken })
+      setSubmitted(true)
+      trackEvent(analyticsEvents.WAITLIST_JOINED, { interest: form.interest })
+      setForm({ name: '', email: '', city: '', interest: 'Events' })
+    } catch (failure) {
+      setErrorMessage(failure.message)
+      trackEvent(analyticsEvents.WAITLIST_SUBMIT_FAILED, { code: failure.status || 'connection' })
+    } finally {
+      lock.current = false
+      setLoading(false)
+      setTurnstileToken('')
+      setChallengeVersion((version) => version + 1)
     }
-
-    setSubmitted(true)
-
-    trackEvent(analyticsEvents.WAITLIST_JOINED, {
-      interest: form.interest,
-      city: form.city.trim(),
-    })
-
-    setForm({
-      name: '',
-      email: '',
-      city: '',
-      interest: 'Events',
-    })
-
-    setTurnstileToken('')
   }
 
   return (
@@ -114,6 +81,9 @@ export default function WaitlistForm() {
         <input
           type="text"
           name="name"
+          aria-label="Name"
+          maxLength={100}
+          disabled={loading}
           placeholder="Name"
           value={form.name}
           onChange={handleChange}
@@ -123,6 +93,9 @@ export default function WaitlistForm() {
         <input
           type="email"
           name="email"
+          aria-label="Email"
+          maxLength={255}
+          disabled={loading}
           placeholder="Email"
           required
           value={form.email}
@@ -133,6 +106,9 @@ export default function WaitlistForm() {
         <input
           type="text"
           name="city"
+          aria-label="City"
+          maxLength={100}
+          disabled={loading}
           placeholder="City"
           value={form.city}
           onChange={handleChange}
@@ -141,6 +117,8 @@ export default function WaitlistForm() {
 
         <select
           name="interest"
+          aria-label="Interest"
+          disabled={loading}
           value={form.interest}
           onChange={handleChange}
           className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-4 outline-none"
@@ -154,6 +132,7 @@ export default function WaitlistForm() {
 
         {siteKey && (
           <Turnstile
+            key={challengeVersion}
             siteKey={siteKey}
             onSuccess={setTurnstileToken}
             onExpire={() => setTurnstileToken('')}
@@ -162,13 +141,13 @@ export default function WaitlistForm() {
         )}
 
         {errorMessage && (
-          <p className="text-sm font-semibold text-red-300">
+          <p role="alert" className="text-sm font-semibold text-red-300">
             {errorMessage}
           </p>
         )}
 
         {submitted && (
-          <div className="py-6 text-center">
+          <div role="status" className="py-6 text-center">
             <Trophy className="mx-auto mb-4 h-12 w-12" />
 
             <h3 className="mb-2 text-2xl font-bold">

@@ -19,7 +19,11 @@ function getSupabaseConfig() {
   }
 }
 
+import { handleCors } from './_lib/cors.js'
+
 export default async function handler(request, response) {
+  if (handleCors(request, response, 'POST')) return
+  response.setHeader('Cache-Control', 'no-store')
   if (request.method !== 'POST') {
     return response.status(405).json({
       error: 'Method not allowed',
@@ -35,11 +39,14 @@ export default async function handler(request, response) {
   })
 
   if (!rateLimit.allowed) {
+    response.setHeader('Retry-After', String(Math.max(1, Math.ceil((rateLimit.resetAt - Date.now()) / 1000))))
     return response.status(429).json({
       error: 'Too many requests. Please try again shortly.',
     })
   }
 
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 10000)
   try {
     const {
       turnstileToken,
@@ -76,9 +83,10 @@ export default async function handler(request, response) {
     const turnstileResult = await verifyTurnstileToken(
       turnstileToken,
       remoteIp,
+      controller.signal,
     )
 
-    if (!turnstileResult.success) {
+    if (turnstileResult?.success !== true) {
       return response.status(403).json({
         error: 'Security check failed.',
       })
@@ -88,6 +96,8 @@ export default async function handler(request, response) {
 
     const supabaseResponse = await fetch(`${url}/rest/v1/feedback`, {
       method: 'POST',
+      signal: controller.signal,
+      redirect: 'error',
       headers: {
         apikey: serviceRoleKey,
         Authorization: `Bearer ${serviceRoleKey}`,
@@ -103,11 +113,8 @@ export default async function handler(request, response) {
     })
 
     if (!supabaseResponse.ok) {
-      const errorText = await supabaseResponse.text()
-
       console.error('[api/feedback] direct supabase insert failed', {
         status: supabaseResponse.status,
-        errorText,
       })
 
       return response.status(500).json({
@@ -118,13 +125,9 @@ export default async function handler(request, response) {
     return response.status(200).json({
       ok: true,
     })
-  } catch (error) {
-    console.error('[api/feedback] unexpected error', {
-      message: error.message,
+  } catch {
+    return response.status(controller.signal.aborted ? 504 : 503).json({
+      error: controller.signal.aborted ? 'Submission timed out. Its status could not be confirmed.' : 'Submission could not be confirmed. Please try again later.',
     })
-
-    return response.status(500).json({
-      error: error.message || 'Unexpected server error.',
-    })
-  }
+  } finally { clearTimeout(timeout) }
 }
