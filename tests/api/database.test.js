@@ -26,7 +26,7 @@ beforeAll(async () => {
     alter default privileges in schema public grant all on tables to anon, authenticated;
     insert into auth.users(id) values ('00000000-0000-0000-0000-000000000009');
   `)
-  const folder = new URL('../supabase/migrations/', import.meta.url)
+  const folder = new URL('../../supabase/migrations/', import.meta.url)
   for (const file of (await readdir(folder)).filter((file) => file.endsWith('.sql')).sort()) {
     await db.exec(await readFile(new URL(file, folder), 'utf8'))
   }
@@ -73,7 +73,7 @@ describe('real SQL migration and permission checks', () => {
     }
   })
   it('refuses to overwrite existing intake tables when a legacy schema is encountered', async () => {
-    const migration = await readFile(new URL('../supabase/migrations/202609210001_intake_foundation.sql', import.meta.url), 'utf8')
+    const migration = await readFile(new URL('../../supabase/migrations/202609210001_intake_foundation.sql', import.meta.url), 'utf8')
     await expect(db.exec(migration)).rejects.toThrow('Existing intake tables detected')
     await db.exec('rollback')
     expect((await db.query("select to_regclass('public.waitlist') as name")).rows[0].name).toBe('waitlist')

@@ -1,7 +1,7 @@
 import { afterEach, expect, it, vi } from 'vitest'
-import events from './events.js'
-import waitlist from './waitlist.js'
-import feedback from './feedback.js'
+import events from '../../api/events.js'
+import waitlist from '../../api/waitlist.js'
+import feedback from '../../api/feedback.js'
 afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals() })
 it.each([['events', events, 'GET', 30], ['waitlist', waitlist, 'POST', 5], ['feedback', feedback, 'POST', 5]])('throttles %s before further provider requests', async (name, handler, method, limit) => {
   vi.stubEnv('TICKETMASTER_API_KEY', 'test-key')

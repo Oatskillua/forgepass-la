@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
-import metrics from './admin-metrics.js'
-import waitlist from './admin-waitlist.js'
-import feedback from './admin-feedback.js'
-import exportWaitlist from './admin-export-waitlist.js'
-import exportFeedback from './admin-export-feedback.js'
-import feedbackStatus from './admin-feedback-status.js'
+import metrics from '../../api/admin-metrics.js'
+import waitlist from '../../api/admin-waitlist.js'
+import feedback from '../../api/admin-feedback.js'
+import exportWaitlist from '../../api/admin-export-waitlist.js'
+import exportFeedback from '../../api/admin-export-feedback.js'
+import feedbackStatus from '../../api/admin-feedback-status.js'
 
-vi.mock('./_lib/adminAuth.js', () => ({ validateAdminAccess: vi.fn(async () => false) }))
+vi.mock('../../api/_lib/adminAuth.js', () => ({ validateAdminAccess: vi.fn(async () => false) }))
 
 describe('admin endpoint authorization boundary', () => {
   it.each([

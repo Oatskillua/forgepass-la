@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
-import handler from './events.js'
+import handler from '../../api/events.js'
 beforeEach(() => { vi.stubEnv('TICKETMASTER_API_KEY', 'test-secret'); vi.stubGlobal('fetch', vi.fn()) })
 afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.useRealTimers() })
 async function invoke(query = {}, method = 'GET') {

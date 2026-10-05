@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import waitlist from './waitlist.js'
-import feedback from './feedback.js'
-vi.mock('./_lib/rateLimit.js', () => ({ checkRateLimit: () => ({ allowed: true }), getClientIp: () => 'test-ip' }))
+import waitlist from '../../api/waitlist.js'
+import feedback from '../../api/feedback.js'
+vi.mock('../../api/_lib/rateLimit.js', () => ({ checkRateLimit: () => ({ allowed: true }), getClientIp: () => 'test-ip' }))
 beforeEach(() => {
   vi.stubEnv('SUPABASE_URL', 'https://database.example')
   vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'server-secret')

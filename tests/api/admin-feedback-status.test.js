@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import handler from './admin-feedback-status.js'
-vi.mock('./_lib/adminAuth.js', () => ({ validateAdminAccess: async () => true }))
+import handler from '../../api/admin-feedback-status.js'
+vi.mock('../../api/_lib/adminAuth.js', () => ({ validateAdminAccess: async () => true }))
 beforeEach(() => {
   vi.stubEnv('SUPABASE_URL', 'https://example.invalid')
   vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'test-only')
