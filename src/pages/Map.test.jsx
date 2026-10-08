@@ -28,3 +28,20 @@ it('shows oversized route errors without crashing and recovers after correction'
   expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   expect(screen.getByRole('link', { name: 'Launch directions' })).toHaveAttribute('href')
 })
+
+it('opens rideshare handoff in a separate tab', () => {
+  render(<MapPage />)
+
+  fireEvent.change(screen.getByLabelText('Destination'), {
+    target: { value: '312 W 120th St' },
+  })
+
+  const rideshare = screen.getByRole('link', { name: 'Rideshare handoff' })
+
+  expect(rideshare).toHaveAttribute('target', '_blank')
+  expect(rideshare).toHaveAttribute('rel', 'noreferrer')
+  expect(rideshare).toHaveAttribute(
+    'href',
+    expect.stringContaining('dropoff%5Bformatted_address%5D=312+W+120th+St'),
+  )
+})

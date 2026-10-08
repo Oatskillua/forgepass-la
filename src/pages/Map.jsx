@@ -40,7 +40,15 @@ export default function MapPage() {
           {directions.error && <p role="alert" className="mt-3 text-red-300">{directions.error}</p>}
           <div className="mt-6 flex flex-wrap gap-3">
             <a href={directionsUrl || undefined} target="_blank" rel="noreferrer" aria-disabled={!directionsUrl} className={`inline-flex items-center gap-2 rounded-2xl px-5 py-3 font-bold ${directionsUrl ? 'bg-cyan-300 text-black' : 'pointer-events-none bg-white/10 text-white/30'}`}>Launch directions <ExternalLink className="h-4 w-4" /></a>
-            <a href={rideshareUrl || undefined} aria-disabled={!rideshareUrl} className={`rounded-2xl border border-white/15 px-5 py-3 font-bold ${rideshareUrl ? 'text-white' : 'pointer-events-none text-white/30'}`}>Rideshare handoff</a>
+            <a
+  href={rideshareUrl || undefined}
+  target="_blank"
+  rel="noreferrer"
+  aria-disabled={!rideshareUrl}
+  className={`rounded-2xl border border-white/15 px-5 py-3 font-bold ${rideshareUrl ? 'text-white' : 'pointer-events-none text-white/30'}`}
+>
+  Rideshare handoff
+</a>
           </div>
           <p className="mt-3 text-sm text-white/60">Rideshare handoff uses your current location and final destination only. Add any intermediate stops in the rideshare app.</p>
         </section>
